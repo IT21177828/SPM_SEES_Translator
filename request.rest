@@ -1,0 +1,59 @@
+GET http://localhost:5050/users
+
+###
+
+POST http://localhost:5050/users
+Content-Type: application/json
+
+{
+    "name" : "Kylle",
+    "password" :  "pass"
+}
+
+###
+
+POST http://localhost:5050/users/login
+Content-Type: application/json
+
+{
+    "name" : "Kylle",
+    "password" :  "pass"
+}
+
+###
+GET http://localhost:5050/users/name
+
+###
+GET http://localhost:5050/bad
+
+
+
+###
+POST http://localhost:5050/bad/word
+Content-Type: application/json
+
+{
+    "name" : "Suppa",
+    "searchPhase" :  "අප්පට සාන්ත මල්ලි"
+}
+
+
+###
+GET http://localhost:5050/bad/all
+
+###
+POST http://localhost:5050/bad/word
+Content-Type: application/json
+
+{
+    "name" : "Kylle",
+    "phase" :  "This is fucking awasome men"
+}
+
+###
+DELETE  http://localhost:5050/bad/a
+Content-Type: application/json
+
+{
+    "ID" : "64f5cf8a21b50b84efb7e86e"    
+}
