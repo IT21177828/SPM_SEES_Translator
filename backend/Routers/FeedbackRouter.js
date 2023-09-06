@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  createFeedback,
+  createFeedbackForTranslation,
   getAllFeedback,
   getFeedbackById,
   updateFeedbackById,
@@ -9,8 +9,8 @@ import {
 
 const feedbackRouter = express.Router();
 
-// Create new feedback
-feedbackRouter.post('/', createFeedback);
+// Create new feedback for translation
+feedbackRouter.post('/translation', createFeedbackForTranslation);
 
 // Get all feedback
 feedbackRouter.get('/', getAllFeedback);

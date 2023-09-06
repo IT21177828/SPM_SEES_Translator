@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TextBox from '../components/TextBox';
 import Arrows from '../components/Arrows';
 import Button from '../components/Button';
-import Modal from '../components/Modal';
+import FeedbackModal from '../components/FeedbackModal'; // Updated import
 import axios from 'axios';
 
 export default function Translate() {
@@ -12,6 +12,7 @@ export default function Translate() {
   const [outputLanguage, setOutputLanguage] = useState('Sinhala');
   const [textToTranslate, setTextToTranslate] = useState('');
   const [translatedText, setTranslatedText] = useState('');
+  const [feedback, setFeedback] = useState({ englishWord: '', sinhalaWord: '', feedbackText: '' }); // Updated state
 
   const getLanguages = async () => {
     try {
@@ -41,8 +42,27 @@ export default function Translate() {
   const handleClick = () => {
     setInputLanguage(outputLanguage);
     setOutputLanguage(inputLanguage);
-    setTextToTranslate(translatedText); // Swap translated text with input text
-    setTranslatedText(''); // Clear translated text
+    setTextToTranslate(translatedText);
+    setTranslatedText('');
+  };
+
+  // Handle opening the feedback modal
+  const handleFeedbackModalOpen = () => {
+    setFeedback({ ...feedback, englishWord: textToTranslate, sinhalaWord: translatedText });
+    setShowModal('feedback');
+  };
+
+  // Handle feedback submission
+  const handleFeedbackSubmit = async () => {
+    try {
+      // Send the feedback data to the backend
+      await axios.post('http://localhost:5050/feedback', feedback);
+      // Clear the feedback form
+      setFeedback({ englishWord: '', sinhalaWord: '', feedbackText: '' });
+      setShowModal(false); // Close the feedback modal
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -70,15 +90,17 @@ export default function Translate() {
           <div className="button-container" onClick={translate}>
             <Button />
           </div>
+          {/* Add a feedback button */}
+          <button className="feedback-button" onClick={handleFeedbackModalOpen}>
+            Provide Feedback
+          </button>
         </>
       )}
       {showModal && (
-        <Modal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          languages={languages}
-          chosenLanguage={showModal === 'input' ? inputLanguage : outputLanguage}
-          setChosenLanguage={showModal === 'input' ? setInputLanguage : setOutputLanguage}
+        <FeedbackModal
+          feedback={feedback}
+          setFeedback={setFeedback}
+          handleFeedbackSubmit={handleFeedbackSubmit}
         />
       )}
     </div>
