@@ -1,4 +1,6 @@
-import Feedback from '../models/Feedback.js';
+import Feedback from '../models/FeedbackModel.js';
+
+
 
 // Create feedback
 const createFeedback = async (req, res) => {

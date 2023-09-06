@@ -56,6 +56,7 @@ textarea {
   width: 26px;
   height: 26px;
   fill: #5a5a5d;
+  
 }
 
 .option-list {
@@ -150,12 +151,13 @@ input {
 
 .select-drop-down .down-arrow svg {
   position: relative;
-  left: 265px;
+  left: 250px; 
   top: -33px;
   width: 26px;
   height: 26px;
   fill: #8ab4f8;
 }
+
 
 .input .delete {
   position: relative;
