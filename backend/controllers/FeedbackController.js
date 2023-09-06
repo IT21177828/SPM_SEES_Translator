@@ -1,12 +1,10 @@
 import Feedback from '../models/FeedbackModel.js';
 
-
-
-// Create feedback
-const createFeedback = async (req, res) => {
+// Create feedback for translation
+const createFeedbackForTranslation = async (req, res) => {
   try {
-    const { feedbackText } = req.body;
-    const feedback = new Feedback({ feedbackText });
+    const { englishWord, sinhalaWord, feedbackText, isCorrect } = req.body;
+    const feedback = new Feedback({ word: englishWord, feedbackText, isCorrect, userId: req.user.id });
     const savedFeedback = await feedback.save();
     res.status(201).json(savedFeedback);
   } catch (error) {
@@ -41,12 +39,16 @@ const getFeedbackById = async (req, res) => {
   }
 };
 
-// Update feedback
+// Update feedback by ID
 const updateFeedbackById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { feedbackText } = req.body;
-    const updatedFeedback = await Feedback.findByIdAndUpdate(id, { feedbackText }, { new: true });
+    const { feedbackText, isCorrect } = req.body;
+    const updatedFeedback = await Feedback.findByIdAndUpdate(
+      id,
+      { feedbackText, isCorrect },
+      { new: true }
+    );
     if (!updatedFeedback) {
       return res.status(404).json({ message: 'Feedback not found' });
     }
@@ -57,7 +59,7 @@ const updateFeedbackById = async (req, res) => {
   }
 };
 
-// Delete feedback
+// Delete feedback by ID
 const deleteFeedbackById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -72,4 +74,4 @@ const deleteFeedbackById = async (req, res) => {
   }
 };
 
-export { createFeedback, getAllFeedback, getFeedbackById, updateFeedbackById, deleteFeedbackById };
+export { createFeedbackForTranslation, getAllFeedback, getFeedbackById, updateFeedbackById, deleteFeedbackById };
