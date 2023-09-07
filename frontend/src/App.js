@@ -1,18 +1,18 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Translate from "./pages/Translate";
 import History from "./pages/history/History";
+import BadWordHistory from "./pages/BadWordHistory";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App = () => {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Translate />} />
-          <Route path="/history" element={<History />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" exact element={<Translate/>}/>
+        <Route path="/history" element={<History />}/>
+        <Route path="/BadWord" element={<BadWordHistory/>}/>        
+      </Routes>
+    </Router>
   );
 };
 

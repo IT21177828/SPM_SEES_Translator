@@ -7,6 +7,8 @@ import Modal from '../components/Modal'; // Updated import
 import axios from 'axios';
 
 export default function Translate() {
+  
+  //const [showModal, setShowModal] = useState(false)
   const [showDropdownModal, setShowDropdownModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [languages, setLanguages] = useState(null);
@@ -36,6 +38,12 @@ export default function Translate() {
           params: data,
         });
         
+        const name = "Suppa";
+      
+        const content = {name, textToTranslate}
+        await axios.post('http://localhost:5050/bad/word', {
+          params: content
+        })
         
         setTranslatedText(response.data);
        
@@ -93,13 +101,11 @@ const handleFeedbackSubmit = async () => {
     } else {
       console.log('Feedback submission failed.');
     }
+
   } catch (error) {
     console.error(error);
   }
     };
-
-
-
 
   return (
     <div className="app">
