@@ -8,10 +8,6 @@ import membershipTypeRouter from "./Routers/membershipTypeRouter.js";
 import badWordRouter from './Routers/badWordRouter.js';
 import translateRouter from './Routers/translateRouter.js';
 import feedbackRouter from './Routers/feedbackRouter.js';
-
-
-import badWordRouter from "./Routers/badWordRouter.js";
-import translateRouter from "./Routers/translateRouter.js";
 import historyRouter from "./Routers/historyRouter.js";
 
 dotenv.config();
@@ -24,20 +20,13 @@ app.use(cors());
 app.use(express.json());
 
 //Routes
-
 app.use("/membership", membershipRouter);
 app.use("/membershipType", membershipTypeRouter);
 app.use("/user", userRouter);
 app.use('/bad', badWordRouter);
 app.use('/translate', translateRouter);
 app.use('/feedback', feedbackRouter);
-
-app.use("/users", userRouter);
-app.use("/bad", badWordRouter);
-app.use("/translate", translateRouter)
 app.use("/history", historyRouter)
-
-
 
 
 app.listen(PORT, () => {

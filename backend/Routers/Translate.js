@@ -144,13 +144,11 @@ const handleFeedbackSubmit = async () => {
           setShowModal={setShowDropdownModal}
           languages={languages}
           chosenLanguage={inputLanguage}
-          setChosenInLanguage={setInputLanguage}
-          setChosenOutLanguage={setOutputLanguage}
+          setChosenLanguage={setInputLanguage}
         />
       )}
       {showFeedbackModal && (
         <FeedbackModal
-          handleFeedbackModel = {setShowFeedbackModal}
           feedback={feedback}
           setFeedback={setFeedback}
           handleFeedbackSubmit={handleFeedbackSubmit}
