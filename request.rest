@@ -1,13 +1,14 @@
-GET http://localhost:5050/users
+GET http://localhost:5050/history/getHistory
 
 ###
 
-POST http://localhost:5050/users
+POST http://localhost:5050/history/save
 Content-Type: application/json
 
 {
-    "name" : "Kylle",
-    "password" :  "pass"
+    "word" : "Hello",
+    "type1" :  "Sinhala",
+    "type2" :  "English"
 }
 
 ###
@@ -56,4 +57,13 @@ Content-Type: application/json
 
 {
     "ID" : "64f5cf8a21b50b84efb7e86e"    
+}
+
+
+###
+GET http://localhost:5050/bad/badpost
+Content-Type: application/json
+
+{
+    "params" : {"id" : "Suppa" }
 }

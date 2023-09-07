@@ -1,5 +1,5 @@
 const Button = () => {
-  return <div>➟</div>
+  return <div className="cursor-pointer">➟</div>
 }
 
 export default Button
