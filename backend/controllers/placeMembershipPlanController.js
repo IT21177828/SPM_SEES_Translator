@@ -6,6 +6,8 @@ export const membershipTypeModel = mongoose.model("membershipType", membershipTy
 export const membershipModell = mongoose.model("membership", membership);
 
 
+
+//acivate new membership
 export async function activateMembership(req, res){
     const {name} = req.body;
 
@@ -51,6 +53,8 @@ export async function activateMembership(req, res){
 
 }
 
+
+//deactivate membership
 export async function deactivateMemberShip(req,res){
     const {id} = req.params;
 
@@ -59,6 +63,27 @@ export async function deactivateMemberShip(req,res){
 
         if(membershipModel){
             membershipModel.status = "inactive";
+            await membershipModel.save();
+            res.send(membershipModel);
+        }else{
+            res.status(400).json({ error: "Membership does not exist" });
+        }
+
+    }catch(err){
+        res.status(500).json({ error: "Something went wrong" });
+    }
+}
+
+
+// reactivate membership after deactivation
+export async function reactivateMembership(req,res){
+    const {id} = req.params;
+
+    try{
+        const membershipModel = await membershipModell.findOne({_id:id});
+
+        if(membershipModel){
+            membershipModel.status = "active";
             await membershipModel.save();
             res.send(membershipModel);
         }else{
