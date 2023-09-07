@@ -23,6 +23,7 @@ app.use("/translate", translateRouter)
 app.use("/membership", membershipRouter);
 // app.use("/membership", membershipRouter);
 app.use("/membershipType", membershipTypeRouter);
+app.use("/user", userRouter);
 
 
 
