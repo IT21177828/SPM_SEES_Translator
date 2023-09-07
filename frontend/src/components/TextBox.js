@@ -1,4 +1,5 @@
-import SelectDropDown from './SelectDropDown'
+import SelectDropDown from './SelectDropDown';
+import PropTypes from 'prop-types'; // Import PropTypes
 
 const TextBox = ({
   style,
@@ -9,11 +10,11 @@ const TextBox = ({
   translatedText,
   setTranslatedText,
 }) => {
-
   const handleClick = () => {
-    setTextToTranslate('')
-    setTranslatedText('')
-  }
+    setTextToTranslate(''); // Clear the input text
+    setTranslatedText(''); // Clear the translated text
+  };
+
   return (
     <div className={style}>
       <SelectDropDown
@@ -24,7 +25,7 @@ const TextBox = ({
       <textarea
         disabled={style == 'output'}
         className={style}
-        placeholder={style == 'input' ? 'Enter text' : 'Translation'}
+        placeholder={style === 'input' ? 'Enter text' : 'Translation'}
         onChange={(e) => setTextToTranslate(e.target.value)}
         value={style === 'input' ? textToTranslate : translatedText}
       />
@@ -34,7 +35,18 @@ const TextBox = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default TextBox
+// PropTypes to specify the expected prop types
+TextBox.propTypes = {
+  style: PropTypes.string.isRequired,
+  setShowModal: PropTypes.func.isRequired,
+  selectedLanguage: PropTypes.string.isRequired,
+  setTextToTranslate: PropTypes.func.isRequired,
+  textToTranslate: PropTypes.string.isRequired,
+  translatedText: PropTypes.string.isRequired,
+  setTranslatedText: PropTypes.func.isRequired,
+};
+
+export default TextBox;
