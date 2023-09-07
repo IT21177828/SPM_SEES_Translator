@@ -3,10 +3,12 @@ import TextBox from '../components/TextBox';
 import Arrows from '../components/Arrows';
 import Button from '../components/Button';
 import FeedbackModal from '../components/FeedbackModal'; // Updated import
+import Modal from '../components/Modal'; // Updated import
 import axios from 'axios';
 
 export default function Translate() {
-  const [showModal, setShowModal] = useState(false);
+  const [showDropdownModal, setShowDropdownModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [languages, setLanguages] = useState(null);
   const [inputLanguage, setInputLanguage] = useState('English');
   const [outputLanguage, setOutputLanguage] = useState('Sinhala');
@@ -67,13 +69,10 @@ export default function Translate() {
   // Handle opening the feedback modal
   const handleFeedbackModalOpen = () => {
     setFeedback({ ...feedback, englishWord: textToTranslate, sinhalaWord: translatedText });
-    setShowModal('feedback');
+    setShowFeedbackModal(true);
   };
 
-  // Translate.js
-
-// ...
-
+ 
 // Handle feedback submission
 const handleFeedbackSubmit = async () => {
   try {
@@ -97,18 +96,18 @@ const handleFeedbackSubmit = async () => {
   } catch (error) {
     console.error(error);
   }
-};
+    };
 
 
 
 
   return (
     <div className="app">
-      {!showModal && (
+      {!showDropdownModal && (
         <>
           <TextBox
             style="input"
-            setShowModal={setShowModal}
+            setShowModal={setShowDropdownModal}
             selectedLanguage={inputLanguage}
             setTextToTranslate={setTextToTranslate}
             textToTranslate={textToTranslate}
@@ -120,7 +119,7 @@ const handleFeedbackSubmit = async () => {
           </div>
           <TextBox
             style="output"
-            setShowModal={setShowModal}
+            setShowModal={setShowDropdownModal}
             selectedLanguage={outputLanguage}
             translatedText={translatedText}
           />
@@ -133,7 +132,16 @@ const handleFeedbackSubmit = async () => {
           </button>
         </>
       )}
-      {showModal && (
+      {showDropdownModal && (
+        <Modal
+          showModal={showDropdownModal}
+          setShowModal={setShowDropdownModal}
+          languages={languages}
+          chosenLanguage={inputLanguage}
+          setChosenLanguage={setInputLanguage}
+        />
+      )}
+      {showFeedbackModal && (
         <FeedbackModal
           feedback={feedback}
           setFeedback={setFeedback}
