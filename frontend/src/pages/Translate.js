@@ -30,16 +30,32 @@ export default function Translate() {
   }, []);
 
   const translate = async () => {
-    try {
-      const data = { textToTranslate, outputLanguage, inputLanguage };
-      const response = await axios.get('http://localhost:5050/translate/translation', {
-        params: data,
-      });
-      setTranslatedText(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      const data = { textToTranslate, outputLanguage, inputLanguage , translatedText};
+      try {
+        const response = await axios.get('http://localhost:5050/translate/translation', {
+          params: data,
+        });
+        
+        
+        setTranslatedText(response.data);
+       
+        const dataToStore = { ...data, translatedText: response.data };
+        
+        storeTranslationData(dataToStore);
+      } catch (error) {
+        console.error('Error translating:', error);
+      }
+    };
+  //Save History
+  const storeTranslationData = async (data) => {
+      try {
+        
+        await axios.post('http://localhost:5050/history/save', data);
+        console.log('Translation data stored successfully');
+      } catch (error) {
+        console.error('Error storing translation data:', error);
+      }
+    };
 
   const handleClick = () => {
     setInputLanguage(outputLanguage);
@@ -48,40 +64,42 @@ export default function Translate() {
     setTranslatedText('');
   };
 
+  
+
   // Handle opening the feedback modal
   const handleFeedbackModalOpen = () => {
     setFeedback({ ...feedback, englishWord: textToTranslate, sinhalaWord: translatedText });
     setShowFeedbackModal(true);
   };
 
-  // Translate.js
+ 
+// Handle feedback submission
+const handleFeedbackSubmit = async () => {
+  try {
+    // Send the feedback data to the backend
+    const feedbackData = {
+      englishWord: feedback.englishWord,
+      sinhalaWord: feedback.sinhalaWord,
+      feedbackText: feedback.feedbackText,
+    };
+    const response = await axios.post('http://localhost:5050/feedback/translation', feedbackData); // Update the URL as needed
 
-  // ...
-
-  // Handle feedback submission
-  const handleFeedbackSubmit = async () => {
-    try {
-      // Send the feedback data to the backend
-      const feedbackData = {
-        englishWord: feedback.englishWord,
-        sinhalaWord: feedback.sinhalaWord,
-        feedbackText: feedback.feedbackText,
-      };
-      const response = await axios.post('http://localhost:5050/feedback/translation', feedbackData); // Update the URL as needed
-
-      // Check if the submission was successful
-      if (response.status === 201) {
-        console.log('Feedback submitted successfully.');
-        // Clear the feedback form
-        setFeedback({ englishWord: '', sinhalaWord: '', feedbackText: '' });
-        setShowFeedbackModal(false); // Close the feedback modal
-      } else {
-        console.log('Feedback submission failed.');
-      }
-    } catch (error) {
-      console.error(error);
+    // Check if the submission was successful
+    if (response.status === 201) {
+      console.log('Feedback submitted successfully.');
+      // Clear the feedback form
+      setFeedback({ englishWord: '', sinhalaWord: '', feedbackText: '' });
+      setShowModal(false); // Close the feedback modal
+    } else {
+      console.log('Feedback submission failed.');
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+    };
+
+
+
 
   return (
     <div className="app">
