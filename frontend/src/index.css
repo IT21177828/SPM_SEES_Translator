@@ -56,6 +56,7 @@ textarea {
   width: 26px;
   height: 26px;
   fill: #5a5a5d;
+  
 }
 
 .option-list {
@@ -150,12 +151,13 @@ input {
 
 .select-drop-down .down-arrow svg {
   position: relative;
-  left: 265px;
+  left: 250px; 
   top: -33px;
   width: 26px;
   height: 26px;
   fill: #8ab4f8;
 }
+
 
 .input .delete {
   position: relative;
@@ -164,3 +166,115 @@ input {
   font-size: 50px;
   color:#bdc1c6;
 }
+
+
+
+.feedback-modal {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.feedback-modal h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.feedback-modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.feedback-modal button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.feedback-modal button:hover {
+  background-color: #0056b3;
+}
+
+
+.feedback-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px; 
+  cursor: pointer;
+  position: absolute;
+  top: 520px; 
+  left: 50%;
+  transform: translateX(-50%);
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.feedback-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); 
+}
+
+.feedback-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.button-gap {
+  margin-bottom: 10px; 
+}
+.feedback-button-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+}
+
+
+.feedback-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px; 
+  gap: 5px; 
+}
+
+
+
+.back-button {
+  background-color: #dc3545; 
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px; 
+  margin-bottom: 20px; 
+  display: block; 
+  width: 35%;
+  margin-left: auto; 
+  margin-right: auto; 
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #c82333; 
+  transform: scale(1.05);
+}
+
+
