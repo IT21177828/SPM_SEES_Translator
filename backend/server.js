@@ -8,10 +8,6 @@ import membershipTypeRouter from "./Routers/membershipTypeRouter.js";
 import badWordRouter from './Routers/badWordRouter.js';
 import translateRouter from './Routers/translateRouter.js';
 import feedbackRouter from './Routers/feedbackRouter.js';
-
-
-import badWordRouter from "./Routers/badWordRouter.js";
-import translateRouter from "./Routers/translateRouter.js";
 import historyRouter from "./Routers/historyRouter.js";
 
 dotenv.config();
