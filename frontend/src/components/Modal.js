@@ -12,6 +12,7 @@ const Modal = ({
   const filteredLanguages = languages.filter((language) =>
     language.toLowerCase().startsWith(searchedLanguage.toLowerCase())
   )
+  console.log(showModal)
 
   const handleClick = (e) => {
     setChosenLanguage(e.target.textContent)

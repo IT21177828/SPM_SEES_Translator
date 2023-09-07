@@ -36,6 +36,13 @@ export default function Translate() {
         params: data 
       
       })
+      const name = "Suppa";
+      
+      const content = {name, textToTranslate}
+      await axios.post('http://localhost:5050/bad/word', {
+        params: content
+      })
+
       setTranslatedText(response.data)
     
   
@@ -52,7 +59,7 @@ export default function Translate() {
         {!showModal && (
           <>
             <TextBox
-              styles="input"
+              style="input"
               setShowModal={setShowModal}
               selectedLanguage={inputLanguage}
               setTextToTranslate={setTextToTranslate}
@@ -63,7 +70,7 @@ export default function Translate() {
               <Arrows />
             </div>
             <TextBox
-              styles="output"
+              style="output"
               setShowModal={setShowModal}
               selectedLanguage={outputLanguage}
               translatedText={translatedText}
