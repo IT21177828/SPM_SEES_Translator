@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import userRouter from './Routers/userRouter.js';
 import badWordRouter from "./Routers/badWordRouter.js";
 import translateRouter from "./Routers/translateRouter.js";
-
+import historyRouter from "./Routers/historyRouter.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 5050;
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/users", userRouter);
 app.use("/bad", badWordRouter);
 app.use("/translate", translateRouter)
-
+app.use("/history", historyRouter)
 
 
 
