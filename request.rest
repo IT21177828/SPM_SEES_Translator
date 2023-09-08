@@ -1,14 +1,16 @@
-GET http://localhost:5050/history/getHistory
+GET http://localhost:5050/savedWord/getSavedWord
 
 ###
 
-POST http://localhost:5050/history/save
+POST http://localhost:5050/savedWord/saved
 Content-Type: application/json
 
 {
-    "word" : "Hello",
-    "type1" :  "Sinhala",
-    "type2" :  "English"
+  "inputLanguage": "Sinhala",
+  "outputLanguage": "English",
+  "textToTranslate": "Mother",
+  "translatedText": "අම්මා",
+  "createdAt": "2020-05-01T10:00:00.000Z"
 }
 
 ###
