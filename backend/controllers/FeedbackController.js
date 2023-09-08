@@ -3,9 +3,12 @@ import Feedback from '../models/FeedbackModel.js';
 // Create feedback for translation
 const createFeedbackForTranslation = async (req, res) => {
   try {
-    const { englishWord, sinhalaWord, feedbackText, isCorrect } = req.body;
-    const feedback = new Feedback({ word: englishWord, feedbackText, isCorrect, userId: req.user.id });
+    const { englishWord, sinhalaWord, feedbackText } = req.body;
+    const feedback = new Feedback({ word: englishWord, feedbackText, userId: req.user.id });
+
+    // Save the feedback to the database
     const savedFeedback = await feedback.save();
+
     res.status(201).json(savedFeedback);
   } catch (error) {
     console.error(error);
@@ -43,12 +46,8 @@ const getFeedbackById = async (req, res) => {
 const updateFeedbackById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { feedbackText, isCorrect } = req.body;
-    const updatedFeedback = await Feedback.findByIdAndUpdate(
-      id,
-      { feedbackText, isCorrect },
-      { new: true }
-    );
+    const { feedbackText } = req.body;
+    const updatedFeedback = await Feedback.findByIdAndUpdate(id, { feedbackText }, { new: true });
     if (!updatedFeedback) {
       return res.status(404).json({ message: 'Feedback not found' });
     }
@@ -74,4 +73,10 @@ const deleteFeedbackById = async (req, res) => {
   }
 };
 
-export { createFeedbackForTranslation, getAllFeedback, getFeedbackById, updateFeedbackById, deleteFeedbackById };
+export {
+  createFeedbackForTranslation,
+  getAllFeedback,
+  getFeedbackById,
+  updateFeedbackById,
+  deleteFeedbackById,
+};
