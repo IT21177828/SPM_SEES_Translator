@@ -21,7 +21,7 @@ export const userModel = mongoose.model("user", userSchema);
 export function hashPasswordNew(password){
     return crypto.pbkdf2Sync(password, "no_salt",  
         1000, 64, `sha512`).toString(`hex`); 
-
+}
 //add new user
 
 export function registerUser(req,res){
@@ -141,13 +141,10 @@ const loginUser = (req, res) => {
           } else {
             res.send("Incorrect password");
           }
-         }
-        }else{
-            res.send("User not found")
         }
-      } else {
-        res.send("User not found");
-      }
+      }else{
+        res.send("User not found")
+      }      
     })
     .catch((err) => {
       res.send(err);
