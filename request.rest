@@ -1,14 +1,16 @@
-GET http://localhost:5050/history/getHistory
+GET http://localhost:5050/savedWord/getSavedWord
 
 ###
 
-POST http://localhost:5050/history/save
+POST http://localhost:5050/savedWord/saved
 Content-Type: application/json
 
 {
-    "word" : "Hello",
-    "type1" :  "Sinhala",
-    "type2" :  "English"
+  "inputLanguage": "Sinhala",
+  "outputLanguage": "English",
+  "textToTranslate": "Mother",
+  "translatedText": "අම්මා",
+  "createdAt": "2020-05-01T10:00:00.000Z"
 }
 
 ###
@@ -35,28 +37,30 @@ Content-Type: application/json
 
 {
     "name" : "Suppa",
-    "searchPhase" :  "අප්පට සාන්ත මල්ලි"
+    "searchPhase" :  "cake shop"
 }
 
 
 ###
 GET http://localhost:5050/bad/all
 
+
 ###
 POST http://localhost:5050/bad/word
 Content-Type: application/json
 
 {
+    "params":{
     "name" : "Kylle",
-    "phase" :  "This is fucking awasome men"
-}
+    "textToTranslate" :  "This is cake time"
+}}
 
 ###
 DELETE  http://localhost:5050/bad/a
 Content-Type: application/json
 
 {
-    "ID" : "64f5cf8a21b50b84efb7e86e"    
+    "ID" : "64fa2c3e1a1b5fe4c4ff68aa"    
 }
 
 
@@ -65,5 +69,14 @@ GET http://localhost:5050/bad/badpost
 Content-Type: application/json
 
 {
-    "params" : {"id" : "Suppa" }
+    "params" : {"id" : "Kylle" }
+}
+
+###
+GET http://localhost:5050/user/login
+Content-Type: application/json
+
+{
+    "email" : "admin@gmail.com",
+    "passwordHash" : "0000" 
 }

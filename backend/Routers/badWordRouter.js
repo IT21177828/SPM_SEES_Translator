@@ -12,8 +12,6 @@ badWordRouter.get("/", (req, res) => {
 });
 
 
-const name = "අප්පට හැමනියන් බන් හැමනියන් සාන්ත මල්ලි වේසී";
-
 badWordRouter.get('/all', badWordController.index)
 badWordRouter.get('/badpost', badWordController.getAllBWordsById)
 badWordRouter.post('/word', badWordController.checkBword, badWordController.store)
