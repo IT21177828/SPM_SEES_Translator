@@ -4,8 +4,6 @@ import Arrows from '../components/Arrows';
 import Button from '../components/Button';
 import FeedbackModal from '../components/FeedbackModal'; // Updated import
 import Modal from '../components/Modal'; // Updated import
-import TranslationHistory from './history/TranslationHistory'; // Updated import
-import TranslationSaved from './savedWord/TranslationSaved'; // Updated import
 import axios from 'axios';
 
 export default function Translate() {
@@ -13,8 +11,6 @@ export default function Translate() {
   const [showModal, setShowModal] = useState(false)
   const [showDropdownModal, setShowDropdownModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const [showSavedModal, setShowSavedModal] = useState(false);
   const [languages, setLanguages] = useState(null);
   const [inputLanguage, setInputLanguage] = useState('English');
   const [outputLanguage, setOutputLanguage] = useState('Sinhala');
@@ -140,26 +136,6 @@ const handleFeedbackSubmit = async () => {
           <button className="feedback-button" onClick={handleFeedbackModalOpen}>
             Provide Feedback
           </button>
-          {/* Add a History button */}
-          <div className="relative h-full">
-  <button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-1"
-    onClick={() => setShowHistoryModal(true)}
-  >
-    History
-  </button>
-  
-</div>
-<div className="relative h-full">
-  <button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-16"
-    onClick={() => setShowSavedModal(true)}
-  >
-    Favourite
-  </button>
-  
-</div>
-
         </>
       )}
       {showDropdownModal && (
@@ -168,29 +144,16 @@ const handleFeedbackSubmit = async () => {
           setShowModal={setShowDropdownModal}
           languages={languages}
           chosenLanguage={inputLanguage}
-          setChosenInLanguage={setInputLanguage}
-          setChosenOutLanguage={setOutputLanguage}
+          setChosenLanguage={setInputLanguage}
         />
       )}
       {showFeedbackModal && (
         <FeedbackModal
-          handleFeedbackModel = {setShowFeedbackModal}
           feedback={feedback}
           setFeedback={setFeedback}
           handleFeedbackSubmit={handleFeedbackSubmit}
         />
       )}
-      {showHistoryModal && (
-  <div className="history-modal ">
-    <TranslationHistory isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} />
-  </div>
-)}
-{showSavedModal&& (
-  <div className="favourite-modal ">
-    <TranslationSaved isOpen={showSavedModal} onClose={() => setShowSavedModal(false)} />
-  </div>
-)}
-
     </div>
   );
 }
