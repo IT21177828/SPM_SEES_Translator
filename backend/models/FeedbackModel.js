@@ -9,10 +9,6 @@ const feedbackSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isCorrect: {
-    type: Boolean,
-    required: true,
-  },
   userId: {
     type: String,
     required: true,

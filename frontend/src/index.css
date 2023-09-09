@@ -31,6 +31,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 300px;
+  color: white;
 }
 
 textarea {
@@ -67,7 +68,8 @@ textarea {
   width: 100%;
 }
 
-.search-bar {
+.search-bar {  
+  color: white;
   width: 100%;
   display: flex;
   justify-content: center;

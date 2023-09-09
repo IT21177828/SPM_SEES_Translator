@@ -5,22 +5,26 @@ const Modal = ({
   setShowModal,
   languages,
   chosenLanguage,
-  setChosenLanguage,
+  setChosenInLanguage,
+  setChosenOutLanguage,
 }) => {
   const [searchedLanguage, setSearchedLanguage] = useState('')
 
   const filteredLanguages = languages.filter((language) =>
     language.toLowerCase().startsWith(searchedLanguage.toLowerCase())
   )
+  console.log(showModal)
 
   const handleClick = (e) => {
-    setChosenLanguage(e.target.textContent)
+    e.preventDefault();
+    setChosenInLanguage(e.target.textContent)
     setShowModal(false)
   }
 
   const handleChange = (e) => {
+    e.preventDefault();
     setSearchedLanguage(e.target.value)
-    setChosenLanguage(e.target.value)
+    setChosenInLanguage(e.target.value)
   }
   return (
     <div className="option-list">

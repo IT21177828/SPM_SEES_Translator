@@ -1,2 +1,2 @@
-const badWordsList = ["හුත්තෝ", "පකයා", "හැමනියන්", "වේසී"];
+const badWordsList = ["Apple", "Peach", "banana", "milk", "lemon", "cake"];
 export default badWordsList;

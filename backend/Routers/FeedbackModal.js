@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function FeedbackModal({ feedback, setFeedback, handleFeedbackSubmit, handleFeedbackModel }) {
+export default function FeedbackModal({ feedback, setFeedback, handleFeedbackSubmit }) {
   const { englishWord, sinhalaWord, feedbackText } = feedback;
 
   return (
@@ -20,9 +20,7 @@ export default function FeedbackModal({ feedback, setFeedback, handleFeedbackSub
         <button className="submit-button" onClick={handleFeedbackSubmit}>
           Submit
         </button>
-        <button className="back-button" onClick={() => {setFeedback({ englishWord: '', sinhalaWord: '', feedbackText: '' })
-        handleFeedbackModel(false)
-      }}>
+        <button className="back-button" onClick={() => setFeedback({ englishWord: '', sinhalaWord: '', feedbackText: '' })}>
           Back
         </button>
       </div>
