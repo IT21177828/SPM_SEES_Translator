@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-const user = "Suppa";
+
+const user = "Kylle";
 export default function BadWordHistory() {
   const [postDetails, setPostDetails] = useState([]);
 
