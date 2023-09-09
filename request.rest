@@ -67,5 +67,14 @@ GET http://localhost:5050/bad/badpost
 Content-Type: application/json
 
 {
-    "params" : {"id" : "Suppa" }
+    "params" : {"id" : "Kylle" }
+}
+
+###
+GET http://localhost:5050/user/login
+Content-Type: application/json
+
+{
+    "email" : "admin@gmail.com",
+    "passwordHash" : "0000" 
 }
