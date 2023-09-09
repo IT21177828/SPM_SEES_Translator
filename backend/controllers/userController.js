@@ -2,39 +2,64 @@ import mongoose from "../db/conn.js";
 import userSchema from "../models/usermodel.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', // Use the appropriate email service
+    auth: {
+      user: 'bpathumghgfhgf@gmail.com', // Replace with your email address
+      pass: 'pgfliawb0000kmllcenm', // Replace with your email password or an app-specific password
+    },
+  });
+
+
 
 export const userModel = mongoose.model("user", userSchema);
 
-export function hashPasswordNew(password) {
-  return crypto
-    .pbkdf2Sync(password, "no_salt", 1000, 64, `sha512`)
-    .toString(`hex`);
-}
+
+export function hashPasswordNew(password){
+    return crypto.pbkdf2Sync(password, "no_salt",  
+        1000, 64, `sha512`).toString(`hex`); 
 
 //add new user
-export function registerUser(req, res) {
-  const { firstName, lastName, email, passwordHash, gender, age, address } =
-    req.body;
 
-  let newUser = new userModel();
-  newUser.firstName = firstName;
-  newUser.lastName = lastName;
-  newUser.email = email;
-  newUser.passwordHash = hashPasswordNew(passwordHash);
-  newUser.gender = gender;
-  newUser.age = age;
-  newUser.address = address;
+export function registerUser(req,res){
+    const {firstName, lastName, email, passwordHash, gender, age, address} = req.body;
 
-  newUser
-    .save()
-    .then((response) => {
-      res.send(response);
-      console.log("User added successfully");
+    let newUser = new userModel()
+    newUser.firstName = firstName
+    newUser.lastName = lastName
+    newUser.email = email
+    newUser.passwordHash = hashPasswordNew(passwordHash)  
+    newUser.gender = gender
+    newUser.age = age
+    newUser.address = address
+
+    newUser.save().then((response)=>{
+        res.send(response)
+        console.log("User added successfully");
+
+        const mailOptions = {
+            from: 'it21180552@my.sliit.lk', // Replace with your email address
+            to: newUser.email, // Replace with the recipient's email address
+            subject: 'Hello from Nodemailer',
+            text: 'This is a test email sent from Nodemailer.',
+          };
+        
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+            } else {
+              console.log('Email sent:', info.response);
+            }
+          });
+
+
+    }).catch((err)=>{
+        res.send(err)
+        console.log(err)
     })
-    .catch((err) => {
-      res.send(err);
-      console.log(err);
-    });
 }
 
 // create an admin account
@@ -64,6 +89,7 @@ export function adminAccount(req, res) {
 }
 
 // login user
+
 const generateAccessToken = (user) => {
   return jwt.sign({ email: user.email }, "secret_key", {
     expiresIn: "15m",
@@ -115,6 +141,9 @@ const loginUser = (req, res) => {
           } else {
             res.send("Incorrect password");
           }
+         }
+        }else{
+            res.send("User not found")
         }
       } else {
         res.send("User not found");

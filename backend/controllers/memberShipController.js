@@ -55,4 +55,20 @@ export function updateMembershipInfo(req,res){
     })
 }
 
+export function deleteMembership(req, res) {
+    membershipTypeModel.deleteOne({ _id: req.params.id })
+        .then((result) => {
+            if (result.deletedCount === 0) {
+                res.status(404).json({ message: "Membership not found" });
+            } else {
+                res.send(result);
+            }
+        })
+        .catch((err) => {
+            console.error(err); // Log the error for debugging
+            res.status(500).json({ message: "Something went wrong" });
+        });
+}
+
+
 
