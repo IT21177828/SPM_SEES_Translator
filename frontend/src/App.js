@@ -8,6 +8,7 @@ import TranslationHistory from "./pages/history/TranslationHistory";
 import TranslationSaved from "./pages/savedWord/TranslationSaved";
 import Login from "./pages/login/Login";
 import Registration from "./pages/registration/Registration";
+import MemberShipPlan from "./pages/membershipPlans/MemberShipPlan"
 const App = () => {
   return (
     <Router>
@@ -17,7 +18,8 @@ const App = () => {
         <Route path="/register"  element={<Registration/>}/>
         <Route path="/saved" element={<TranslationSaved/>}/>
         <Route path="/history" element={<TranslationHistory/>}/>
-        <Route path="/BadWord" element={<BadWordHistory/>}/>        
+        <Route path="/BadWord" element={<BadWordHistory/>}/>  
+        <Route path="/memberships" element={<MemberShipPlan/>}/>    
       </Routes>
     </Router>
   );
