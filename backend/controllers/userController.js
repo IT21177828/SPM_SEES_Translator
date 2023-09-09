@@ -2,8 +2,23 @@ import mongoose from "../db/conn.js";
 import userSchema from "../models/usermodel.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', // Use the appropriate email service
+    auth: {
+      user: 'bpathumghgfhgf@gmail.com', // Replace with your email address
+      pass: 'pgfliawb0000kmllcenm', // Replace with your email password or an app-specific password
+    },
+  });
+
+
 
 export const userModel = mongoose.model("user", userSchema);
+
+
+
 
 
 export function hashPasswordNew(password){
@@ -29,10 +44,32 @@ export function registerUser(req,res){
     newUser.save().then((response)=>{
         res.send(response)
         console.log("User added successfully");
+
+        const mailOptions = {
+            from: 'it21180552@my.sliit.lk', // Replace with your email address
+            to: newUser.email, // Replace with the recipient's email address
+            subject: 'Hello from Nodemailer',
+            text: 'This is a test email sent from Nodemailer.',
+          };
+        
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+            } else {
+              console.log('Email sent:', info.response);
+            }
+          });
+
+
     }).catch((err)=>{
         res.send(err)
         console.log(err)
     })
+
+    
+
+
+
 }
 
 
@@ -70,10 +107,7 @@ export function loginUser(req,res){
         if(response != null){
             // check if the user is admin
             if(response.email === "admin@gmail.com" && response.passwordHash === hashPasswordNew("0000")){
-                const token = jwt.sign({email : user.email}, "secret_key",{
-                    expiresIn: "1h",
-                });
-
+                const token = jwt.sign({email : user.email}, "secret_key",);
                 // req.session.userId = response._id;
 
                 res.status(200).json({
@@ -85,10 +119,7 @@ export function loginUser(req,res){
             else{
                 if(response.passwordHash == hashPasswordNew(passwordHash)){
 
-                    const token = jwt.sign({email : user.email}, "secret_key",{
-                        expiresIn: "1h",
-                    });
-
+                    const token = jwt.sign({email : user.email}, "secret_key",);
                     res.status(200).json({
                         message : "Auth successful",
                         token: token,
