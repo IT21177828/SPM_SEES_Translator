@@ -118,6 +118,26 @@ const handleFeedbackSubmit = async () => {
     };
 
   return (
+    <div className=''>
+    <header className="bg-blue-500 p-4 flex justify-between items-center md:px-8">
+      <div className="flex items-center">
+        <img
+          src="user-icon.png" // Replace with your user icon URL
+          alt="User Icon"
+          className="w-8 h-8 rounded-full mr-2"
+        />
+        <span className="text-white font-semibold text-lg">
+          John Doe {/* Replace with the user's name */}
+        </span>
+      </div>
+      <button className="bg-white text-blue-500 py-2 px-4 rounded-lg hover:bg-blue-100">
+        Sign In
+      </button>
+    </header>
+
+    <div>
+
+    </div>
     <div className="app">
       {!showDropdownModal && (
         <>
@@ -200,6 +220,8 @@ const handleFeedbackSubmit = async () => {
     <TranslationSaved isOpen={showSavedModal} onClose={() => setShowSavedModal(false)} />
   </div>
 )}
+
+    </div>
 
     </div>
   );

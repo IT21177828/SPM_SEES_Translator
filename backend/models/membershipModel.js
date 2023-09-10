@@ -2,6 +2,11 @@ import mongoose from "../db/conn.js";
 
 const membership = new mongoose.Schema({
 
+    user:{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "user",
+    },
+
     membershipType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "membershipType",
