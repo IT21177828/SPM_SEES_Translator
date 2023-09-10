@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const user = "Suppa";
 
-export default function BadwordFeature() {
+export default function BadwordFeature(userId) {
   const [postDetails, setPostDetails] = useState([]);
+
+  console.log(userId)
+  const user = userId.userId;
 
   async function getDetails() {
     const id = { user };

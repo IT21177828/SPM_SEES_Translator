@@ -4,12 +4,15 @@ import Feedback from '../models/FeedbackModel.js';
 const createFeedbackForTranslation = async (req, res) => {
   try {
     const { englishWord, sinhalaWord, feedbackText } = req.body;
-    const feedback = new Feedback({ word: englishWord, feedbackText, userId: req.user.id });
-
+    const feedback = new Feedback({ word: englishWord, sword: sinhalaWord, feedbackText, userId: "req.user.id" });
+    console.log(feedback)
     // Save the feedback to the database
-    const savedFeedback = await feedback.save();
+    const savedFeedback = await feedback.save()
+    .then((resp) => {
+      res.status(201).json(resp);
+    })
 
-    res.status(201).json(savedFeedback);
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

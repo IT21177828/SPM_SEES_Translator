@@ -8,12 +8,14 @@ import TranslationHistory from "./pages/history/TranslationHistory";
 import TranslationSaved from "./pages/savedWord/TranslationSaved";
 import Login from "./pages/login/Login";
 import Registration from "./pages/registration/Registration";
+import FeedbackTable from "./pages/feedback/FedbackTable";
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" exact element={<Translate/>}/>
         <Route path="/login"  element={<Login/>}/>
+        <Route path="/feedback"  element={<FeedbackTable/>}/>
         <Route path="/register"  element={<Registration/>}/>
         <Route path="/saved" element={<TranslationSaved/>}/>
         <Route path="/history" element={<TranslationHistory/>}/>

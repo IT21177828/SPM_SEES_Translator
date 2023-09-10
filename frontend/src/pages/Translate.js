@@ -138,7 +138,9 @@ export default function Translate() {
         }
       );
 
-      const name = "Suppa";
+      const name = user._id;
+
+      console.log(user._id)
 
       const content = { name, textToTranslate };
       await axios.post("http://localhost:5050/bad/word", {
@@ -219,6 +221,8 @@ export default function Translate() {
     setBanner(false);
   }
 
+  user && console.log("AAAAAAAAAAAAAAA"+user._id);
+
   return (
     <div className="flex flex-row">
       <div>
@@ -256,7 +260,7 @@ export default function Translate() {
               </svg>
             </a>
 
-            <a
+            {user._id ? <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -278,9 +282,9 @@ export default function Translate() {
                   d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-            </a>
+            </a>:""}
 
-            <a
+            {user._id ? <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -302,8 +306,8 @@ export default function Translate() {
                   d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"
                 />
               </svg>
-            </a>
-            <a
+            </a>:""}
+           { user._id ? <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -325,13 +329,14 @@ export default function Translate() {
                   d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-            </a>
-
+            </a>:""
+}
             <a
-              href="#"
+              href="/feedback"
               onClick={(e) => {
                 e.preventDefault();
-                handleFeature(5);
+                navigate("/feedback");
+                // handleFeature(5);
               }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
@@ -406,7 +411,7 @@ export default function Translate() {
                   />
                 </svg>
               </div>{" "}
-              <BadwordFeature />{" "}
+              <BadwordFeature userId = {user._id} />{" "}
             </div>
           ) : (
             ""
@@ -442,7 +447,7 @@ export default function Translate() {
           )}
           {feature === 3 && banner ? (
             <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
-              <BadwordFeature />{" "}
+              <BadwordFeature userId = {user._id} />{" "}
               <div
                 onClick={(e) => {
                   e.preventDefault();
@@ -526,7 +531,7 @@ export default function Translate() {
           )}
           {feature === 6 && banner ? (
             <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
-              <BadwordFeature />{" "}
+              <BadwordFeature userId = {user._id} />{" "}
               <div
                 onClick={(e) => {
                   e.preventDefault();
@@ -555,8 +560,8 @@ export default function Translate() {
         </aside>
       </div>
 
-      <div>
-        <header className="bg-blue-500 p-4 flex justify-between items-center md:px-8">
+      <div className="flex flex-col w-full mb-16">
+        <header className="bg-blue-500 w-full float-right p-4 flex justify-between items-center md:px-8">
           <div className="flex items-center">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/translator-spm.appspot.com/o/userImg.png?alt=media&token=21e4bdb5-afe8-440d-a448-67edadb3b63a" // Replace with your user icon URL

@@ -87,7 +87,10 @@ const remove = (req, res) => {
 
 const getAllBWordsById = (req, res) => {
     // const id = req.body.params.id;
+    console.log(req.query)
     const id = req.query.user || req.body.params.id;
+
+    
 
     if(!id){
       console.log(req)

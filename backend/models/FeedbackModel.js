@@ -5,6 +5,9 @@ const feedbackSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sword: {
+    type: String,
+  },
   feedbackText: {
     type: String,
     required: true,

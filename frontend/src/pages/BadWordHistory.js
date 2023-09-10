@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const user = "Kylle";
-export default function BadWordHistory() {
+export default function BadWordHistory({userId}) {
   const [postDetails, setPostDetails] = useState([]);
 
+  const user = "64fcb2b404a23c6f45980822";
+  console.log(user)
+
   async function getDetails() {
+    
     const id = { user };
 
     const posts = await axios.get("http://localhost:5050/bad/badpost", {
