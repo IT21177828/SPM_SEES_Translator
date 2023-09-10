@@ -37,6 +37,19 @@ export  async function createMembership(req, res) {
 
 }
 
+export function viewMembership(req, res) {
+    console.log("sddsavsd")
+    membershipTypeModel.find(req.body)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        console.error(err); // Use console.error for error logging
+        res.status(500).json({ message: "something wrong" });
+      });
+  }
+  
+
 
 export function updateMembershipInfo(req,res){
     const {name,price,description} = req.body;
