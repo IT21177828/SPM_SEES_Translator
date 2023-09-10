@@ -60,7 +60,7 @@ const translate =
 
     /**
  * ALTERNATUVE API INCASE OF EMERGANCY
- * 
+ * */
  
     outputLanguage = outputLanguage.substring(0,2).toLowerCase();
     inputLanguage = inputLanguage.substring(0, 2).toLowerCase();
@@ -89,33 +89,33 @@ const translate =
       res.status(201).json(response.data.data.translations[0].translatedText)
     } catch (error) {
       console.error(error);
-    }
+    }/*
 */
 
-    const options = {
-      method: "GET",
-      params: {
-        text: textToTranslate,
-        tl: outputLanguage,
-        sl: inputLanguage,
-      },
-      headers: {
-        "x-rapidapi-host": process.env.RAPID_API_HOST,
-        "x-rapidapi-key": process.env.RAPID_API_KEY,
-      },
-    };
+    // const options = {
+    //   method: "GET",
+    //   params: {
+    //     text: textToTranslate,
+    //     tl: outputLanguage,
+    //     sl: inputLanguage,
+    //   },
+    //   headers: {
+    //     "x-rapidapi-host": process.env.RAPID_API_HOST,
+    //     "x-rapidapi-key": process.env.RAPID_API_KEY,
+    //   },
+    // };
 
-    try {
-      const response = await axios(
-        "https://g-translate1.p.rapidapi.com/translate",
-        options
-      );
-      console.log(response.data);
-      res.status(200).json(response.data);
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: err });
-    }
+    // try {
+    //   const response = await axios(
+    //     "https://g-translate1.p.rapidapi.com/translate",
+    //     options
+    //   );
+    //   console.log(response.data);
+    //   res.status(200).json(response.data);
+    // } catch (err) {
+    //   console.log(err);
+    //   res.status(500).json({ message: err });
+    // }
   });
 
 export default { language, translate };
