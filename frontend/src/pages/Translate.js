@@ -35,6 +35,7 @@ export default function Translate() {
   const [user, setUser] = useState({}); // Updated state
   const [isLogedIn, setIsLogedIn] = useState(false); // Updated state
   const [feature, setFeature] = useState(0); // Updated state
+  const [banner, setBanner] = useState(false); // Updated state
 
   const getLanguages = async () => {
     try {
@@ -208,10 +209,15 @@ export default function Translate() {
     }
   };
 
-  function handleFeature(e){
-    console.log(e)
+  function handleFeature(e) {
+    setBanner(true);
+    console.log(e);
     setFeature(e);
-  };
+  }
+
+  function closeBanner() {
+    setBanner(false);
+  }
 
   return (
     <div className="flex flex-row">
@@ -228,7 +234,10 @@ export default function Translate() {
 
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(1)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(1);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -249,7 +258,10 @@ export default function Translate() {
 
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(2)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(2);
+              }}
               class="rounded-lg bg-blue-100 p-1.5 text-blue-500 transition-colors duration-200 dark:bg-gray-800 dark:text-blue-400"
             >
               <svg
@@ -270,7 +282,10 @@ export default function Translate() {
 
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(3)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(3);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -290,7 +305,10 @@ export default function Translate() {
             </a>
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(4)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(4);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -311,7 +329,10 @@ export default function Translate() {
 
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(5)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(5);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -332,7 +353,10 @@ export default function Translate() {
 
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(6)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(6);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -357,14 +381,177 @@ export default function Translate() {
             </a>
           </div>
 
-          
-            {feature === 1 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"> <BadwordFeature /> </div> : ""}
-            {feature === 2 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><PremiumFeature /></div> : ""}
-            {feature === 3 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><BadwordFeature /></div> : ""}
-            {feature === 4 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><HistoryFeature /></div> : ""}
-            {feature === 5 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><FavoriteFeatue /></div> : ""}
-            {feature === 6 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><BadwordFeature /></div> : ""}
-         
+          {feature === 1 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              {" "}
+              <div
+                className="relative top-0 right-0"
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>{" "}
+              <BadwordFeature />{" "}
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 2 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              {" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+              <PremiumFeature />
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 3 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <BadwordFeature />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 4 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <HistoryFeature />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 5 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <FavoriteFeatue />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 6 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <BadwordFeature />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </aside>
       </div>
 

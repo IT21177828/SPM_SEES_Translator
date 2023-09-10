@@ -3,12 +3,22 @@ import axios from "axios";
 //language
 
 const language = async (req, res) => {
+  // const options = {
+  //   method: "GET",
+  //   url: "https://google-translate1.p.rapidapi.com/language/translate/v2/languages",
+  //   headers: {
+  //     "Accept-Encoding": "application/gzip",
+  //     "X-RapidAPI-Key": "bc56163dedmsh5bde41c965bb45dp13112fjsn9b51e5a72802",
+  //     "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+  //   },
+  // };
+
   const options = {
     method: "GET",
     url: "https://google-translate1.p.rapidapi.com/language/translate/v2/languages",
     headers: {
       "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Key": "bc56163dedmsh5bde41c965bb45dp13112fjsn9b51e5a72802",
+      "X-RapidAPI-Key": "10a52fb510msh5e42a1f3a4d0785p14c4ffjsne03054547f93",
       "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
     },
   };
@@ -19,8 +29,10 @@ const language = async (req, res) => {
 
     const languagesData = response.data.data;
 
-    const mappedLanguages = languagesData.languages.map((lang, key) => lang.language+key);
-    console.log(mappedLanguages)
+    const mappedLanguages = languagesData.languages.map(
+      (lang, key) => lang.language + key
+    );
+    console.log(mappedLanguages);
 
     res.status(200).json(mappedLanguages);
   } catch (error) {
@@ -59,10 +71,10 @@ const translate =
     let { textToTranslate, outputLanguage, inputLanguage } = req.query;
 
     /**
- * ALTERNATUVE API INCASE OF EMERGANCY
- * */
- 
-    outputLanguage = outputLanguage.substring(0,2).toLowerCase();
+     * ALTERNATUVE API INCASE OF EMERGANCY
+     * */
+
+    outputLanguage = outputLanguage.substring(0, 2).toLowerCase();
     inputLanguage = inputLanguage.substring(0, 2).toLowerCase();
 
     const encodedParams = new URLSearchParams();
@@ -70,27 +82,41 @@ const translate =
     encodedParams.set("target", outputLanguage);
     encodedParams.set("source", inputLanguage);
 
+    // const options = {
+    //   method: "POST",
+    //   url: "https://google-translate1.p.rapidapi.com/language/translate/v2",
+    //   headers: {
+    //     "content-type": "application/x-www-form-urlencoded",
+    //     "Accept-Encoding": "application/gzip",
+    //     "X-RapidAPI-Key": "bc56163dedmsh5bde41c965bb45dp13112fjsn9b51e5a72802",
+    //     "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+    //   },
+    //   data: encodedParams,
+    // };
+
     const options = {
       method: "POST",
       url: "https://google-translate1.p.rapidapi.com/language/translate/v2",
       headers: {
         "content-type": "application/x-www-form-urlencoded",
         "Accept-Encoding": "application/gzip",
-        "X-RapidAPI-Key": "bc56163dedmsh5bde41c965bb45dp13112fjsn9b51e5a72802",
+        "X-RapidAPI-Key": "10a52fb510msh5e42a1f3a4d0785p14c4ffjsne03054547f93",
         "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
       },
       data: encodedParams,
     };
-    console.log(options)
+
+    console.log(options);
 
     try {
       const response = await axios.request(options);
       console.log(response.data.data.translations);
-      res.status(201).json(response.data.data.translations[0].translatedText)
+      res.status(201).json(response.data.data.translations[0].translatedText);
     } catch (error) {
       console.error(error);
-    }/*
-*/
+    }
+    /*
+     */
 
     // const options = {
     //   method: "GET",
