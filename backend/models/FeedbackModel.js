@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
+import mongoose from "../db/conn.js";
 
 const feedbackSchema = new mongoose.Schema({
   word: {
@@ -13,12 +14,10 @@ const feedbackSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  // createdAt: {
+  //   type: Date,
+  //   default: Date.now,
+  // },
 });
 
-const Feedback = mongoose.model('Feedback', feedbackSchema);
-
-export default Feedback;
+export default feedbackSchema;

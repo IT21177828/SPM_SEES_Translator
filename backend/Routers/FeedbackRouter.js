@@ -19,9 +19,9 @@ feedbackRouter.get('/', getAllFeedback);
 feedbackRouter.get('/:id', getFeedbackById);
 
 // Update feedback by ID
-feedbackRouter.put('/:id', updateFeedbackById);
+feedbackRouter.put('/update/:id', updateFeedbackById);
 
 // Delete feedback by ID
-feedbackRouter.delete('/:id', deleteFeedbackById);
+feedbackRouter.delete('/delete/:id', deleteFeedbackById);
 
 export default feedbackRouter;
