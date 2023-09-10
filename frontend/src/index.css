@@ -280,3 +280,13 @@ input {
 }
 
 
+.favorite-icon {
+  color: #ffcc00; /* Set your desired color */
+  cursor: pointer;
+  margin-right: 8px; /* Adjust spacing as needed */
+}
+
+.output-text {
+  display: flex;
+  align-items: center;
+}

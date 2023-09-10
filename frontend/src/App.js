@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import SavedWords from "./pages/savedWord/SavedWord";
 import TranslationHistory from "./pages/history/TranslationHistory";
 import TranslationSaved from "./pages/savedWord/TranslationSaved";
+import { Checkout } from "./pages/checkout/Checkout";
 const App = () => {
   return (
     <Router>
@@ -13,7 +14,8 @@ const App = () => {
         <Route path="/" exact element={<Translate/>}/>
         <Route path="/saved" element={<TranslationSaved/>}/>
         <Route path="/history" element={<TranslationHistory/>}/>
-        <Route path="/BadWord" element={<BadWordHistory/>}/>        
+        <Route path="/BadWord" element={<BadWordHistory/>}/>  
+        <Route path="/checkout" element={<Checkout/>}/>       
       </Routes>
     </Router>
   );

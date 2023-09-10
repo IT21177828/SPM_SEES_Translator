@@ -10,6 +10,7 @@ import translateRouter from './Routers/translateRouter.js';
 import feedbackRouter from './Routers/feedbackRouter.js';
 import historyRouter from "./Routers/historyRouter.js";
 import savedwordRouter from "./Routers/SavedWordRouter.js";
+import checkoutRouter from "./Routers/checkoutRouter.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 5050;
@@ -28,7 +29,7 @@ app.use('/translate', translateRouter);
 app.use('/feedback', feedbackRouter);
 app.use("/history", historyRouter);
 app.use("/savedWord", savedwordRouter);
-
+app.use("/checkout", checkoutRouter);
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
 });

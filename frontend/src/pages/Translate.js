@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import TextBox from '../components/TextBox';
 import Arrows from '../components/Arrows';
 import Button from '../components/Button';
@@ -8,8 +9,10 @@ import TranslationHistory from './history/TranslationHistory'; // Updated import
 import TranslationSaved from './savedWord/TranslationSaved'; // Updated import
 import axios from 'axios';
 
+
+
 export default function Translate() {
-  
+ 
   const [showModal, setShowModal] = useState(false)
   const [showDropdownModal, setShowDropdownModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -22,6 +25,7 @@ export default function Translate() {
   const [translatedText, setTranslatedText] = useState('');
   const [feedback, setFeedback] = useState({ englishWord: '', sinhalaWord: '', feedbackText: '' }); // Updated state
 
+  
   const getLanguages = async () => {
     try {
       const response = await axios.get('http://localhost:5050/translate/languages');
@@ -35,7 +39,7 @@ export default function Translate() {
     getLanguages();
   }, []);
 
-  const translate = async () => {
+  const translate = async (dataToSave) => {
       const data = { textToTranslate, outputLanguage, inputLanguage , translatedText};
       try {
         const response = await axios.get('http://localhost:5050/translate/translation', {
@@ -54,6 +58,7 @@ export default function Translate() {
         const dataToStore = { ...data, translatedText: response.data };
         
         storeTranslationData(dataToStore);
+        
       } catch (error) {
         console.error('Error translating:', error);
       }
@@ -64,6 +69,7 @@ export default function Translate() {
         
         await axios.post('http://localhost:5050/history/save', data);
         console.log('Translation data stored successfully');
+        
       } catch (error) {
         console.error('Error storing translation data:', error);
       }
@@ -132,6 +138,9 @@ const handleFeedbackSubmit = async () => {
             setShowModal={setShowDropdownModal}
             selectedLanguage={outputLanguage}
             translatedText={translatedText}
+            textToTranslate={textToTranslate}
+            outputLanguage={outputLanguage}
+            inputLanguage={inputLanguage}
           />
           <div className="button-container" onClick={translate}>
             <Button />
@@ -141,6 +150,7 @@ const handleFeedbackSubmit = async () => {
             Provide Feedback
           </button>
           {/* Add a History button */}
+          <div className='flex'>
           <div className="relative h-full">
   <button
     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-1"
@@ -159,7 +169,7 @@ const handleFeedbackSubmit = async () => {
   </button>
   
 </div>
-
+</div>
         </>
       )}
       {showDropdownModal && (
