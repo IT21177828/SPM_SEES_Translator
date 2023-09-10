@@ -13,6 +13,7 @@ userRouter.post('/login', userController.loginUser);
 userRouter.get('/checkAge', checkAge);
 
 userRouter.post('/refresh', userController.verify, userController.refresh);
+userRouter.post('/details', userController.verify, userController.userDetails);
 userRouter.post('/showName', userController.verify, userController.showName);
 
 

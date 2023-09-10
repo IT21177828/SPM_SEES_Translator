@@ -31,7 +31,7 @@ const TranslationSaved = ({ isOpen, onClose }) => {
 
   const handleDelete = (id) => {
     axios
-      .delete('http://localhost:5050/history/deleteHistory/' + id)
+      .delete('http://localhost:5050/savedWord/deleteSavedWord/' + id)
       .then(res => {
         console.log(res);
         // Remove the deleted item from the local state

@@ -92,12 +92,12 @@ export function adminAccount(req, res) {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ email: user.email }, "secret_key", {
-    expiresIn: "15m",
+    expiresIn: "5s",
   });
 };
 const generateRefreshToken = (user) => {
   return jwt.sign({ email: user.email }, "refresh_secret_key", {
-    expiresIn: "15m",
+    expiresIn: "5s",
   });
 };
 
@@ -151,6 +151,30 @@ const loginUser = (req, res) => {
       console.log(err);
     });
 };
+//get user details
+const userDetails = (req, res) => {
+  const email = req.user.email;
+  userModel
+  .findOne({ email: email })
+  .then((user) => {
+    // check response is not null
+    if (user != null) {
+      //send user details
+      res.status(200).json({
+        message: "User Details",
+        user : user
+      });
+    }else{
+      res.send("User not found")
+    }
+  })
+  .catch((err) => {
+    res.send(err);
+    console.log(err);
+  });
+};
+
+       
 
 //checking age for safe browsing
 export function checkAge(req, res) {
@@ -166,6 +190,7 @@ export function checkAge(req, res) {
 
 const verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  console.log(req.headers)
 
   console.log("BBBBBBBB"+authHeader);
 
@@ -229,4 +254,5 @@ export default {
   refresh,
   showName,
   loginUser,
+  userDetails,
 };
