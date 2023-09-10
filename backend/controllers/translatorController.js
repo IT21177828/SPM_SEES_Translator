@@ -60,8 +60,13 @@ const translate =
 
     /**
  * ALTERNATUVE API INCASE OF EMERGANCY
+
  * */
  
+
+ * 
+ */
+
     outputLanguage = outputLanguage.substring(0,2).toLowerCase();
     inputLanguage = inputLanguage.substring(0, 2).toLowerCase();
 
@@ -110,8 +115,12 @@ const translate =
     //     "https://g-translate1.p.rapidapi.com/translate",
     //     options
     //   );
+
     //   console.log(response.data);
     //   res.status(200).json(response.data);
+
+    //   res.status(200).json(response.data.data.translation);
+
     // } catch (err) {
     //   console.log(err);
     //   res.status(500).json({ message: err });

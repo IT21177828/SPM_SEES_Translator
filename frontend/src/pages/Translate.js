@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import TextBox from "../components/TextBox";
 import Arrows from "../components/Arrows";
@@ -14,10 +15,28 @@ import PremiumFeature from "./features/PremiumFeature";
 import HistoryFeature from "./features/HistoryFeature";
 import FavoriteFeatue from "./features/FavoriteFeatue";
 
+import React, { useEffect, useState } from 'react';
+
+import TextBox from '../components/TextBox';
+import Arrows from '../components/Arrows';
+import Button from '../components/Button';
+import FeedbackModal from '../components/FeedbackModal'; // Updated import
+import Modal from '../components/Modal'; // Updated import
+import TranslationHistory from './history/TranslationHistory'; // Updated import
+import TranslationSaved from './savedWord/TranslationSaved'; // Updated import
+import axios from 'axios';
+
+
+
+
 export default function Translate() {
+
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
+
+  const [showModal, setShowModal] = useState(false)
+
   const [showDropdownModal, setShowDropdownModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
@@ -36,6 +55,7 @@ export default function Translate() {
   const [isLogedIn, setIsLogedIn] = useState(false); // Updated state
   const [feature, setFeature] = useState(0); // Updated state
 
+  
   const getLanguages = async () => {
     try {
       const response = await axios.get(
@@ -117,6 +137,7 @@ export default function Translate() {
     fetchUserData();
   }, []);
 
+
   useEffect(() => {
     // Log the updated user state
     console.log(user.firstName);
@@ -128,6 +149,31 @@ export default function Translate() {
       outputLanguage,
       inputLanguage,
       translatedText,
+
+  const translate = async (dataToSave) => {
+      const data = { textToTranslate, outputLanguage, inputLanguage , translatedText};
+      try {
+        const response = await axios.get('http://localhost:5050/translate/translation', {
+          params: data,
+        });
+        
+        const name = "Suppa";
+      
+        const content = {name, textToTranslate}
+        await axios.post('http://localhost:5050/bad/word', {
+          params: content
+        })
+        
+        setTranslatedText(response.data);
+       
+        const dataToStore = { ...data, translatedText: response.data };
+        
+        storeTranslationData(dataToStore);
+        
+      } catch (error) {
+        console.error('Error translating:', error);
+      }
+
     };
     try {
       const response = await axios.get(
@@ -155,6 +201,7 @@ export default function Translate() {
   };
   //Save History
   const storeTranslationData = async (data) => {
+
     try {
       await axios.post("http://localhost:5050/history/save", data);
       console.log("Translation data stored successfully");
@@ -162,6 +209,17 @@ export default function Translate() {
       console.error("Error storing translation data:", error);
     }
   };
+
+      try {
+        
+        await axios.post('http://localhost:5050/history/save', data);
+        console.log('Translation data stored successfully');
+        
+      } catch (error) {
+        console.error('Error storing translation data:', error);
+      }
+    };
+
 
   const handleClick = () => {
     setInputLanguage(outputLanguage);
@@ -246,6 +304,7 @@ export default function Translate() {
                 />
               </svg>
             </a>
+
 
             <a
               href="#"
@@ -356,6 +415,91 @@ export default function Translate() {
               </svg>
             </a>
           </div>
+
+    </div>
+    <div className="app">
+      {!showDropdownModal && (
+        <>
+          <TextBox
+            style="input"
+            setShowModal={setShowDropdownModal}
+            selectedLanguage={inputLanguage}
+            setTextToTranslate={setTextToTranslate}
+            textToTranslate={textToTranslate}
+            translatedText={translatedText}
+            setTranslatedText={setTranslatedText}
+          />
+          <div className="arrow-container" onClick={handleClick}>
+            <Arrows />
+          </div>
+          <TextBox
+            style="output"
+            setShowModal={setShowDropdownModal}
+            selectedLanguage={outputLanguage}
+            translatedText={translatedText}
+            textToTranslate={textToTranslate}
+            outputLanguage={outputLanguage}
+            inputLanguage={inputLanguage}
+          />
+          <div className="button-container" onClick={translate}>
+            <Button />
+          </div>
+          {/* Add a feedback button */}
+          <button className="feedback-button" onClick={handleFeedbackModalOpen}>
+            Provide Feedback
+          </button>
+          {/* Add a History button */}
+          <div className='flex'>
+          <div className="relative h-full">
+  <button
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-1"
+    onClick={() => setShowHistoryModal(true)}
+  >
+    History
+  </button>
+  
+</div>
+<div className="relative h-full">
+  <button
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-16"
+    onClick={() => setShowSavedModal(true)}
+  >
+    Favourite
+  </button>
+  
+</div>
+</div>
+        </>
+      )}
+      {showDropdownModal && (
+        <Modal
+          showModal={showDropdownModal}
+          setShowModal={setShowDropdownModal}
+          languages={languages}
+          chosenLanguage={inputLanguage}
+          setChosenInLanguage={setInputLanguage}
+          setChosenOutLanguage={setOutputLanguage}
+        />
+      )}
+      {showFeedbackModal && (
+        <FeedbackModal
+          handleFeedbackModel = {setShowFeedbackModal}
+          feedback={feedback}
+          setFeedback={setFeedback}
+          handleFeedbackSubmit={handleFeedbackSubmit}
+        />
+      )}
+      {showHistoryModal && (
+  <div className="history-modal ">
+    <TranslationHistory isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} />
+  </div>
+)}
+{showSavedModal&& (
+  <div className="favourite-modal ">
+    <TranslationSaved isOpen={showSavedModal} onClose={() => setShowSavedModal(false)} />
+  </div>
+)}
+
 
           
             {feature === 1 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"> <BadwordFeature /> </div> : ""}
