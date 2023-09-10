@@ -52,7 +52,7 @@ Content-Type: application/json
 {
     "params":{
     "name" : "Kylle",
-    "textToTranslate" :  "This is cake time"
+    "textToTranslate" :  "Thisggggg is cake time"
 }}
 
 ###
@@ -69,7 +69,7 @@ GET http://localhost:5050/bad/badpost
 Content-Type: application/json
 
 {
-    "params" : {"id" : "Kylle" }
+    "params" : {"id" : "64fcb2b404a23c6f45980822" }
 }
 
 ###
@@ -79,4 +79,35 @@ Content-Type: application/json
 {
     "email" : "admin@gmail.com",
     "passwordHash" : "0000" 
+}
+
+
+# Feedback
+###
+POST http://localhost:5050/feedback/translation
+Content-Type: application/json
+
+{
+    "englishWord" : "hello", 
+    "sinhalaWord" : "fsf", 
+    "feedbackText" : "fsf"
+    
+}
+
+###
+GET http://localhost:5050/feedback
+Content-Type: application/json
+
+{
+    "params" : {"id" : "Kylle" }
+}
+
+#ok
+###
+PUT http://localhost:5050/feedback/
+Content-Type: application/json
+
+{
+    "params" : {"id" : "64fdb8b4b88fb3fc384d54b1" },
+    "feedbackText" : "rrrrrrrrrrr"
 }

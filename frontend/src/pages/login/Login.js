@@ -7,7 +7,7 @@ export default function Login() {
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [passwordHash, setPasswordHash] = useState("");
-  const [error, seterror] = useState(false);
+  const [error, seterror] = useState("");
   const [success, setsuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,6 +79,7 @@ export default function Login() {
           navigate("/");
         });
     } catch (error) {
+      seterror("Invalid email or password");
       console.log(error);
     }
   };
@@ -169,6 +170,7 @@ export default function Login() {
                 </a>
               </p>
             </div>
+            <span className="text-red-600">{error}</span>
           </div>
         </div>
       ) : (

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import TextBox from "../components/TextBox";
 import Arrows from "../components/Arrows";
@@ -15,28 +14,10 @@ import PremiumFeature from "./features/PremiumFeature";
 import HistoryFeature from "./features/HistoryFeature";
 import FavoriteFeatue from "./features/FavoriteFeatue";
 
-import React, { useEffect, useState } from 'react';
-
-import TextBox from '../components/TextBox';
-import Arrows from '../components/Arrows';
-import Button from '../components/Button';
-import FeedbackModal from '../components/FeedbackModal'; // Updated import
-import Modal from '../components/Modal'; // Updated import
-import TranslationHistory from './history/TranslationHistory'; // Updated import
-import TranslationSaved from './savedWord/TranslationSaved'; // Updated import
-import axios from 'axios';
-
-
-
-
 export default function Translate() {
-
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
-
-  const [showModal, setShowModal] = useState(false)
-
   const [showDropdownModal, setShowDropdownModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
@@ -54,8 +35,8 @@ export default function Translate() {
   const [user, setUser] = useState({}); // Updated state
   const [isLogedIn, setIsLogedIn] = useState(false); // Updated state
   const [feature, setFeature] = useState(0); // Updated state
+  const [banner, setBanner] = useState(false); // Updated state
 
-  
   const getLanguages = async () => {
     try {
       const response = await axios.get(
@@ -137,7 +118,6 @@ export default function Translate() {
     fetchUserData();
   }, []);
 
-
   useEffect(() => {
     // Log the updated user state
     console.log(user.firstName);
@@ -149,31 +129,6 @@ export default function Translate() {
       outputLanguage,
       inputLanguage,
       translatedText,
-
-  const translate = async (dataToSave) => {
-      const data = { textToTranslate, outputLanguage, inputLanguage , translatedText};
-      try {
-        const response = await axios.get('http://localhost:5050/translate/translation', {
-          params: data,
-        });
-        
-        const name = "Suppa";
-      
-        const content = {name, textToTranslate}
-        await axios.post('http://localhost:5050/bad/word', {
-          params: content
-        })
-        
-        setTranslatedText(response.data);
-       
-        const dataToStore = { ...data, translatedText: response.data };
-        
-        storeTranslationData(dataToStore);
-        
-      } catch (error) {
-        console.error('Error translating:', error);
-      }
-
     };
     try {
       const response = await axios.get(
@@ -183,7 +138,9 @@ export default function Translate() {
         }
       );
 
-      const name = "Suppa";
+      const name = user._id;
+
+      console.log(user._id)
 
       const content = { name, textToTranslate };
       await axios.post("http://localhost:5050/bad/word", {
@@ -201,7 +158,6 @@ export default function Translate() {
   };
   //Save History
   const storeTranslationData = async (data) => {
-
     try {
       await axios.post("http://localhost:5050/history/save", data);
       console.log("Translation data stored successfully");
@@ -209,17 +165,6 @@ export default function Translate() {
       console.error("Error storing translation data:", error);
     }
   };
-
-      try {
-        
-        await axios.post('http://localhost:5050/history/save', data);
-        console.log('Translation data stored successfully');
-        
-      } catch (error) {
-        console.error('Error storing translation data:', error);
-      }
-    };
-
 
   const handleClick = () => {
     setInputLanguage(outputLanguage);
@@ -266,30 +211,19 @@ export default function Translate() {
     }
   };
 
-  function handleFeature(e){
-    console.log(e)
+  function handleFeature(e) {
+    setBanner(true);
+    console.log(e);
     setFeature(e);
-  };
+  }
+
+  function closeBanner() {
+    setBanner(false);
+  }
+
+  user && console.log("AAAAAAAAAAAAAAA"+user._id);
 
   return (
-// <<<<<<< feature/subscriptionAndPaymentHandling
-//     <div className=''>
-//     <header className="bg-blue-500 p-4 flex justify-between items-center md:px-8">
-//       <div className="flex items-center">
-//         <img
-//           src="user-icon.png" // Replace with your user icon URL
-//           alt="User Icon"
-//           className="w-8 h-8 rounded-full mr-2"
-//         />
-//         <span className="text-white font-semibold text-lg">
-//           John Doe {/* Replace with the user's name */}
-//         </span>
-//       </div>
-//       <button className="bg-white text-blue-500 py-2 px-4 rounded-lg hover:bg-blue-100 ">
-//         Sign In
-//       </button>
-//     </header>
-// =======
     <div className="flex flex-row">
       <div>
         <aside class="flex">
@@ -302,10 +236,12 @@ export default function Translate() {
               />
             </a>
 
-
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(1)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(1);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -324,10 +260,12 @@ export default function Translate() {
               </svg>
             </a>
 
-
-            <a
+            {user._id ? <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(2)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(2);
+              }}
               class="rounded-lg bg-blue-100 p-1.5 text-blue-500 transition-colors duration-200 dark:bg-gray-800 dark:text-blue-400"
             >
               <svg
@@ -344,11 +282,14 @@ export default function Translate() {
                   d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-            </a>
+            </a>:""}
 
-            <a
+            {user._id ? <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(3)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(3);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -365,10 +306,13 @@ export default function Translate() {
                   d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"
                 />
               </svg>
-            </a>
-            <a
+            </a>:""}
+           { user._id ? <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(4)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(4);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -385,11 +329,15 @@ export default function Translate() {
                   d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-            </a>
-
+            </a>:""
+}
             <a
-              href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(5)}}
+              href="/feedback"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/feedback");
+                // handleFeature(5);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -410,7 +358,10 @@ export default function Translate() {
 
             <a
               href="#"
-              onClick={(e) =>{ e.preventDefault();handleFeature(6)}}
+              onClick={(e) => {
+                e.preventDefault();
+                handleFeature(6);
+              }}
               class="focus:outline-nones rounded-lg p-1.5 text-gray-500 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               <svg
@@ -435,104 +386,182 @@ export default function Translate() {
             </a>
           </div>
 
-    </div>
-    <div className="app">
-      {!showDropdownModal && (
-        <>
-          <TextBox
-            style="input"
-            setShowModal={setShowDropdownModal}
-            selectedLanguage={inputLanguage}
-            setTextToTranslate={setTextToTranslate}
-            textToTranslate={textToTranslate}
-            translatedText={translatedText}
-            setTranslatedText={setTranslatedText}
-          />
-          <div className="arrow-container" onClick={handleClick}>
-            <Arrows />
-          </div>
-          <TextBox
-            style="output"
-            setShowModal={setShowDropdownModal}
-            selectedLanguage={outputLanguage}
-            translatedText={translatedText}
-            textToTranslate={textToTranslate}
-            outputLanguage={outputLanguage}
-            inputLanguage={inputLanguage}
-          />
-          <div className="button-container" onClick={translate}>
-            <Button />
-          </div>
-          {/* Add a feedback button */}
-          <button className="feedback-button  " onClick={handleFeedbackModalOpen}>
-            Provide Feedback
-          </button>
-          {/* Add a History button */}
-          <div className='flex'>
-          <div className="relative h-full">
-  <button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-1"
-    onClick={() => setShowHistoryModal(true)}
-  >
-    History
-  </button>
-  
-</div>
-<div className="relative h-full">
-  <button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded h-10 absolute bottom-0 right-10  mr-16"
-    onClick={() => setShowSavedModal(true)}
-  >
-    Favourite
-  </button>
-  
-</div>
-</div>
-        </>
-      )}
-      {showDropdownModal && (
-        <Modal
-          showModal={showDropdownModal}
-          setShowModal={setShowDropdownModal}
-          languages={languages}
-          chosenLanguage={inputLanguage}
-          setChosenInLanguage={setInputLanguage}
-          setChosenOutLanguage={setOutputLanguage}
-        />
-      )}
-      {showFeedbackModal && (
-        <FeedbackModal
-          handleFeedbackModel = {setShowFeedbackModal}
-          feedback={feedback}
-          setFeedback={setFeedback}
-          handleFeedbackSubmit={handleFeedbackSubmit}
-        />
-      )}
-      {showHistoryModal && (
-  <div className="history-modal ">
-    <TranslationHistory isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} />
-  </div>
-)}
-{showSavedModal&& (
-  <div className="favourite-modal ">
-    <TranslationSaved isOpen={showSavedModal} onClose={() => setShowSavedModal(false)} />
-  </div>
-)}
-
-
-          
-            {feature === 1 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"> <BadwordFeature /> </div> : ""}
-            {feature === 2 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><PremiumFeature /></div> : ""}
-            {feature === 3 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><BadwordFeature /></div> : ""}
-            {feature === 4 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><HistoryFeature /></div> : ""}
-            {feature === 5 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><FavoriteFeatue /></div> : ""}
-            {feature === 6 ? <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64"><BadwordFeature /></div> : ""}
-         
+          {feature === 1 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              {" "}
+              <div
+                className="relative top-0 right-0"
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>{" "}
+              <BadwordFeature userId = {user._id} />{" "}
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 2 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              {" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+              <PremiumFeature />
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 3 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <BadwordFeature userId = {user._id} />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 4 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <HistoryFeature />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 5 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <FavoriteFeatue />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {feature === 6 && banner ? (
+            <div class="h-screen w-60 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-64">
+              <BadwordFeature userId = {user._id} />{" "}
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeBanner();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </aside>
       </div>
 
-      <div>
-        <header className="bg-blue-500 p-4 flex justify-between items-center md:px-8">
+      <div className="flex flex-col w-full mb-16">
+        <header className="bg-blue-500 w-full float-right p-4 flex justify-between items-center md:px-8">
           <div className="flex items-center">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/translator-spm.appspot.com/o/userImg.png?alt=media&token=21e4bdb5-afe8-440d-a448-67edadb3b63a" // Replace with your user icon URL

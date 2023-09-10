@@ -11,6 +11,7 @@ export default function Registration() {
   const [passwordHash, setPassword] = useState("");
   const [cnfirmPassword, setCnfirmPassword] = useState("");
   const [address, setAddress] = useState("");
+  const [error, setError] = useState("");
 
   const navigation = useNavigate();
 
@@ -35,6 +36,7 @@ export default function Registration() {
       console.log(response);
       navigation("/login");
     } catch (error) {
+      setError("Error with registration")
       console.log(error);
     }
   };
@@ -213,6 +215,7 @@ export default function Registration() {
                 />
               </div>
             </div>
+            <span className="text-red-600">{error}</span>
 
             <div>
               <button
