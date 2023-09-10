@@ -37,6 +37,19 @@ export  async function createMembership(req, res) {
 
 }
 
+export function viewMembership(req, res) {
+    console.log("sddsavsd")
+    membershipTypeModel.find(req.body)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        console.error(err); // Use console.error for error logging
+        res.status(500).json({ message: "something wrong" });
+      });
+  }
+  
+
 
 export function updateMembershipInfo(req,res){
     const {name,price,description} = req.body;
@@ -54,5 +67,21 @@ export function updateMembershipInfo(req,res){
         res.status(500).json({message : "Something went wrong"})
     })
 }
+
+export function deleteMembership(req, res) {
+    membershipTypeModel.deleteOne({ _id: req.params.id })
+        .then((result) => {
+            if (result.deletedCount === 0) {
+                res.status(404).json({ message: "Membership not found" });
+            } else {
+                res.send(result);
+            }
+        })
+        .catch((err) => {
+            console.error(err); // Log the error for debugging
+            res.status(500).json({ message: "Something went wrong" });
+        });
+}
+
 
 
