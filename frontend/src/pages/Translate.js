@@ -124,7 +124,7 @@ const handleFeedbackSubmit = async () => {
           John Doe {/* Replace with the user's name */}
         </span>
       </div>
-      <button className="bg-white text-blue-500 py-2 px-4 rounded-lg hover:bg-blue-100">
+      <button className="bg-white text-blue-500 py-2 px-4 rounded-lg hover:bg-blue-100 ">
         Sign In
       </button>
     </header>
@@ -157,7 +157,7 @@ const handleFeedbackSubmit = async () => {
             <Button />
           </div>
           {/* Add a feedback button */}
-          <button className="feedback-button" onClick={handleFeedbackModalOpen}>
+          <button className="feedback-button  " onClick={handleFeedbackModalOpen}>
             Provide Feedback
           </button>
           {/* Add a History button */}
