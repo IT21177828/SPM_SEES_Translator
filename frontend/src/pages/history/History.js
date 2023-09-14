@@ -89,7 +89,7 @@ const History = () => {
       className='w-full h-10 p-2 rounded-xl border-2 border-blue-200 focus:outline-none focus:border-blue-500'
     />
   </div>
-  <div className='table flex items-center justify-between w-80 mx-auto mt-4' style={{ width: '600px' }}>
+  <div className='flex items-center justify-between w-80 mx-auto mt-4' style={{ width: '600px' }}>
     <div style={{ height: '600px', overflowY: 'auto' }}>
     <table className='w-full text-left table-collapse'>
     <tbody>

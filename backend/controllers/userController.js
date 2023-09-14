@@ -90,12 +90,12 @@ export function adminAccount(req, res) {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ email: user.email }, "secret_key", {
-    expiresIn: "5s",
+    expiresIn: "18m",
   });
 };
 const generateRefreshToken = (user) => {
   return jwt.sign({ email: user.email }, "refresh_secret_key", {
-    expiresIn: "5s",
+    expiresIn: "18m",
   });
 };
 
