@@ -64,8 +64,6 @@ const translate =
  * */
  
 
- * 
- */
 
     outputLanguage = outputLanguage.substring(0,2).toLowerCase();
     inputLanguage = inputLanguage.substring(0, 2).toLowerCase();

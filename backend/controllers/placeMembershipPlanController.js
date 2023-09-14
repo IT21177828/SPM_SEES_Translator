@@ -2,10 +2,13 @@ import mongoose from "../db/conn.js";
 import membership from "../models/membershipModel.js";
 import membershipTypeSchema from "../models/membershipTypemodel.js";
 import user from "../models/usermodel.js";
+
 import jwt from "jsonwebtoken";
+
 
 export const membershipTypeModel = mongoose.model("membershipType", membershipTypeSchema);
 export const membershipModell = mongoose.model("membership", membership);
+export const userModel = mongoose.model("user",user)
 
 
 
@@ -14,8 +17,10 @@ export async function activateMembership(req, res){
     const {name} = req.body;
 
     let membershipType = new membershipTypeModel();
+    let user = new userModel();
 
     membershipType.name = name;
+    // user.
 
     
 

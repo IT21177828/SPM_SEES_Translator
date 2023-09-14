@@ -10,6 +10,8 @@ import { Checkout } from "./pages/checkout/Checkout";
 import Login from "./pages/login/Login";
 import Registration from "./pages/registration/Registration";
 import MemberShipPlan from "./pages/membershipPlans/MemberShipPlan"
+import MembershipControlPanel from "./pages/membershipPlans/MembershipControlPanel";
+import CreateNewMemberShip from "./pages/membershipPlans/CreateNewMemberShip"
 const App = () => {
   return (
     <Router>
@@ -21,7 +23,9 @@ const App = () => {
         <Route path="/history" element={<TranslationHistory/>}/>
         <Route path="/BadWord" element={<BadWordHistory/>}/> 
         <Route path="/checkout" element={<Checkout/>}/>      
-        <Route path="/memberships" element={<MemberShipPlan/>}/>    
+        <Route path="/memberships" element={<MemberShipPlan/>}/>   
+        <Route path = "/membership-control-panel" element={<MembershipControlPanel/>}/> 
+        <Route path = "/create-membership" element={<CreateNewMemberShip/>}/> 
 
       </Routes>
     </Router>
