@@ -8,15 +8,13 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
     service: 'Gmail', // Use the appropriate email service
     auth: {
-      user: 'bpathumghgfhgf@gmail.com', // Replace with your email address
-      pass: 'pgfliawb0000kmllcenm', // Replace with your email password or an app-specific password
+      user: 'bpathum@gmail.com', // Replace with your email address
+      pass: 'pgfliawbkmllcenm', // Replace with your email password or an app-specific password
     },
   });
 
-
-
+  
 export const userModel = mongoose.model("user", userSchema);
-
 
 export function hashPasswordNew(password){
     return crypto.pbkdf2Sync(password, "no_salt",  
@@ -92,12 +90,12 @@ export function adminAccount(req, res) {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ email: user.email }, "secret_key", {
-    expiresIn: "5s",
+    expiresIn: "18m",
   });
 };
 const generateRefreshToken = (user) => {
   return jwt.sign({ email: user.email }, "refresh_secret_key", {
-    expiresIn: "5s",
+    expiresIn: "18m",
   });
 };
 
@@ -151,6 +149,8 @@ const loginUser = (req, res) => {
       console.log(err);
     });
 };
+
+
 //get user details
 const userDetails = (req, res) => {
   const email = req.user.email;
@@ -211,6 +211,8 @@ const verify = (req, res, next) => {
 };
 let refreashTokens = [];
 
+
+
 const refresh = (req, res) => {
     console.log("SSSSSSSSSSSSSSSSSSSSS")
   const refreshToken = req.body.token;
@@ -244,10 +246,12 @@ const showName = (req, res) => {
   res.send("hellooo");
 };
 
+
 export function updateUser(req, re) {
   const { firstName, lastName, email, passwordHash, gender, age, address } =
     req.body;
 }
+
 
 export default {
   verify,
