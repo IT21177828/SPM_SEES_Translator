@@ -10,7 +10,6 @@ const FeedbackTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // Replace with your API call to retrieve feedback data
     axios.get('http://localhost:5050/feedback')
       .then((data) => {
         setFeedbackData(data.data);
