@@ -4,23 +4,25 @@ import mongoose from "../db/conn.js";
 const feedbackSchema = new mongoose.Schema({
   word: {
     type: String,
-    required: true,
+    // required: true,
   },
   sword: {
     type: String,
   },
   feedbackText: {
     type: String,
-    required: true,
+    // required: true,
   },
   userId: {
     type: String,
     required: true,
   },
-  // createdAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-export default feedbackSchema;
+const Feedback = mongoose.model('Feedback', feedbackSchema);
+
+export default Feedback;

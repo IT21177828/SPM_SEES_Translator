@@ -7,8 +7,8 @@ import userController from '../controllers/userController.js';
 
 const membershipRouter = express.Router();
 
-membershipRouter.post('/',userController.verify,activateMembership);
-membershipRouter.post('/deactivate/:id',userController.verify ,deactivateMemberShip);
-membershipRouter.post('/reactivate/:id', userController.verify,reactivateMembership);
+membershipRouter.post('/',activateMembership);
+membershipRouter.post('/deactivate/:id',deactivateMemberShip);
+membershipRouter.post('/reactivate/:id',reactivateMembership);
 
 export default membershipRouter;
