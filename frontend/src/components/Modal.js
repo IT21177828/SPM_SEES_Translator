@@ -10,7 +10,7 @@ const Modal = ({
 }) => {
   const [searchedLanguage, setSearchedLanguage] = useState('')
 
-  const filteredLanguages = languages.filter((language) =>
+  const filteredLanguages = languages?.filter((language) =>
     language.toLowerCase().startsWith(searchedLanguage.toLowerCase())
   )
   console.log(showModal)
@@ -43,7 +43,7 @@ const Modal = ({
       <div className="option-container">
         <ul>
           {filteredLanguages?.map((filteredLanguage, _index) => (
-            <div className="list-item">
+            <div className="list-item" key={_index}>
               <div className="icon">
                 {chosenLanguage === filteredLanguage ? '✓' : ''}
               </div>

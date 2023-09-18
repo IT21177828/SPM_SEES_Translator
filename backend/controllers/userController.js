@@ -189,10 +189,7 @@ export function checkAge(req, res) {
 }
 
 const verify = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  console.log(req.headers)
-
-  console.log("BBBBBBBB"+authHeader);
+  const authHeader = req.headers.authorization; 
 
   if (authHeader) {
     const token = authHeader.split(" ")[1];
@@ -214,7 +211,7 @@ let refreashTokens = [];
 
 
 const refresh = (req, res) => {
-    console.log("SSSSSSSSSSSSSSSSSSSSS")
+   
   const refreshToken = req.body.token;
 
   if (!refreshToken) return res.status(401).json("You are not authenticated!");
