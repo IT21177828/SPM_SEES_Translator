@@ -17,15 +17,6 @@ body {
   align-items: center;
 }
 
-.app {
-  position: relative;
-  left: 300px;
-  top: 200px;
-  display: flex;
-  width: 652px;
-  height: 360px;
-}
-
 .output, 
 .input {
   display: flex;
