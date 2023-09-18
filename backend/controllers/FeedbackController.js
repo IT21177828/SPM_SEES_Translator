@@ -1,4 +1,5 @@
-import Feedback from "../models/FeedbackModel.js";
+import Feedback from '../models/FeedbackModel.js';
+
 
 // Create feedback for translation
 const createFeedbackForTranslation = async (req, res) => {

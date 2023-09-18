@@ -32,8 +32,7 @@ const language = async (req, res) => {
     const mappedLanguages = languagesData.languages.map(
       (lang, key) => lang.language + key
     );
-    console.log(mappedLanguages);
-
+   
     res.status(200).json(mappedLanguages);
   } catch (error) {
     console.error(error);
@@ -106,12 +105,10 @@ const translate =
       },
       data: encodedParams,
     };
-
-    console.log(options);
+    
 
     try {
-      const response = await axios.request(options);
-      console.log(response.data.data.translations);
+      const response = await axios.request(options);      
       res.status(201).json(response.data.data.translations[0].translatedText);
     } catch (error) {
       console.error(error);
