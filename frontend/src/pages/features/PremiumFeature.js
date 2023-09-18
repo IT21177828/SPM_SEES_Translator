@@ -1,7 +1,11 @@
-import React from 'react'
+import React from "react";
 
 export default function PremiumFeature() {
   return (
-    <div>PremiumFeature</div>
-  )
+    <div className="text-white">
+      <h2 className="px-5 text-lg font-medium text-white dark:text-white">
+        PremiumFeature
+      </h2>
+    </div>
+  );
 }
