@@ -40,4 +40,44 @@ const createSavedWord = (async (req, res) => {
     }
   });
 
-export default { createSavedWord, getSavedWord, deleteSavedWord};
+  const deleteWord = async (req, res) => {
+    const { textToTranslate } = req.query; // Get textToTranslate from query parameters
+  
+    try {
+      // Find data based on textToTranslate
+      const deletedData = await SavedWordModel.deleteMany({ textToTranslate: req.body.textToTranslate });
+  
+      if (deletedData.deletedCount > 0) {
+        console.log('Existing data deleted successfully');
+        res.status(200).json({ message: 'Data deleted successfully' });
+      } else {
+        console.log('Data with textToTranslate not found');
+        res.status(404).json({ message: 'Data not found' });
+      }
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  
+  const getSavedWordExist = async (req, res) => {
+    const { textToTranslate } = req.body;
+  
+    try {
+      const word = await SavedWordModel.findOne({ textToTranslate });
+  
+      if (word) {
+        // Word exists in the database
+        res.json({ exists: true });
+      } else {
+        // Word does not exist in the database
+        res.json({ exists: false });
+      }
+    } catch (err) {
+      console.error('Error checking data:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  
+
+export default { createSavedWord, getSavedWord, deleteSavedWord , deleteWord , getSavedWordExist};

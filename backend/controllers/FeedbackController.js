@@ -1,18 +1,24 @@
 import Feedback from '../models/FeedbackModel.js';
 
+
 // Create feedback for translation
 const createFeedbackForTranslation = async (req, res) => {
   try {
     const { englishWord, sinhalaWord, feedbackText } = req.body;
-    const feedback = new Feedback({ word: englishWord, feedbackText, userId: req.user.id });
-
+    const feedback = new Feedback({
+      word: englishWord,
+      sword: sinhalaWord,
+      feedbackText,
+      userId: "req.user.id",
+    });
+    console.log(feedback);
     // Save the feedback to the database
-    const savedFeedback = await feedback.save();
-
-    res.status(201).json(savedFeedback);
+    const savedFeedback = await feedback.save().then((resp) => {
+      res.status(201).json(resp);
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -23,7 +29,7 @@ const getAllFeedback = async (req, res) => {
     res.status(200).json(feedback);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -33,12 +39,12 @@ const getFeedbackById = async (req, res) => {
     const { id } = req.params;
     const feedback = await Feedback.findById(id);
     if (!feedback) {
-      return res.status(404).json({ message: 'Feedback not found' });
+      return res.status(404).json({ message: "Feedback not found" });
     }
     res.status(200).json(feedback);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -47,14 +53,18 @@ const updateFeedbackById = async (req, res) => {
   try {
     const { id } = req.params;
     const { feedbackText } = req.body;
-    const updatedFeedback = await Feedback.findByIdAndUpdate(id, { feedbackText }, { new: true });
+    const updatedFeedback = await Feedback.findByIdAndUpdate(
+      id,
+      { feedbackText },
+      { new: true }
+    );
     if (!updatedFeedback) {
-      return res.status(404).json({ message: 'Feedback not found' });
+      return res.status(404).json({ message: "Feedback not found" });
     }
     res.status(200).json(updatedFeedback);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -64,12 +74,12 @@ const deleteFeedbackById = async (req, res) => {
     const { id } = req.params;
     const deletedFeedback = await Feedback.findByIdAndRemove(id);
     if (!deletedFeedback) {
-      return res.status(404).json({ message: 'Feedback not found' });
+      return res.status(404).json({ message: "Feedback not found" });
     }
-    res.status(200).json({ message: 'Feedback deleted' });
+    res.status(200).json({ message: "Feedback deleted" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -22,6 +22,9 @@ const store = (req, res) => {
   const name = req.body.params.name;
   const textToTranslate = req.body.params.textToTranslate;
 
+  console.log("Logging"+name)
+  console.log("Logging"+textToTranslate)
+
   if (!name || !textToTranslate) {
     return res.status(400).json({
       message: "Name and textToTranslate must be provided.",
@@ -36,6 +39,7 @@ const store = (req, res) => {
   badPhase
     .save()
     .then((response) => {
+      console.log("first" + response);
       res.json({
         message: "post added successfully!",
       });
@@ -52,7 +56,7 @@ const store = (req, res) => {
 const checkBword = (req, res, next) => {
   const phase = req.body.params.textToTranslate;
 
-  console.log(req.body);
+  console.log("Checkiiiing" +req.body);
 
   myPromises(phase)
     .then((result) => {
@@ -83,27 +87,32 @@ const remove = (req, res) => {
 
 const getAllBWordsById = (req, res) => {
     // const id = req.body.params.id;
-    const id = req.query.user || req.body.params.id;
+    const id = req.query.user || req.body.params?.id;
 
     if(!id){
-      console.log(req)
-      return res.status(400).json({
-        message: "Name and textToTranslate must be provided.",
+      return res.status(403).json({
+        message: "User not found Login!",
       });
     }
-    console.log(req.query)
 
-    BadWordModel.find({userID: id}).sort({createdAt: -1})
-    .then((response) => {        
-        res.json({
-            response
-        })
-    }).catch(() => {
-        console.log("Error")
-        res.json({
-          message: "error ocured deleting!",
-        })
-    });
+    try {
+      BadWordModel.find({userID: id}).sort({createdAt: -1})
+      .then((response) => {      
+        console.log("first")  
+          res.json({
+              response
+          })
+      }).catch(() => {
+          console.log("Error")
+          res.json({
+            message: "error ocured deleting!",
+          })
+      });
+    } catch (error) {
+      console.log(error)
+    }
+
+
 }
 
 export default {

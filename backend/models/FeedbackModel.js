@@ -1,13 +1,17 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
+import mongoose from "../db/conn.js";
 
 const feedbackSchema = new mongoose.Schema({
   word: {
     type: String,
-    required: true,
+    // required: true,
+  },
+  sword: {
+    type: String,
   },
   feedbackText: {
     type: String,
-    required: true,
+    // required: true,
   },
   userId: {
     type: String,
