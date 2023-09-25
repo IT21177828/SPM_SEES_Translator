@@ -3,7 +3,7 @@ import mongoose from "../db/conn.js";
 const membership = new mongoose.Schema({
 
     user:{
-        type : mongoose.Schema.Types.ObjectId,
+        type : String,
         ref : "user",
     },
 
