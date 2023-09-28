@@ -30,6 +30,7 @@ const createSavedWord = async (req, res) => {
       outputLanguage,
       textToTranslate,
       translatedText,
+      message: "Add Note Here",
     });
 
     const savedTranslation = await translation.save();
@@ -85,10 +86,41 @@ const getSavedWordExist = async (req, res) => {
   }
 };
 
+const updateMessage = async (req, res) => {
+  try {
+    // Extract data from the request body
+    const { message } = req.body;
+
+    // Check if an 'id' parameter and 'message' are provided
+    if (!message) {
+      return res.status(400).json({ error: "Missing 'message' parameter." });
+    }
+
+    // Find the translation record by ID and update the 'message' field
+    const updatedTranslation = await SavedWordModel.findByIdAndUpdate(
+      req.params.id,
+      { message },
+      { new: true } // This option returns the updated document
+    );
+
+    if (!updatedTranslation) {
+      return res.status(404).json({ error: "Translation not found." });
+    }
+
+    res.json(updatedTranslation);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the message." });
+  }
+};
+
 export default {
   createSavedWord,
   getSavedWord,
   deleteSavedWord,
   deleteWord,
   getSavedWordExist,
+  updateMessage,
 };

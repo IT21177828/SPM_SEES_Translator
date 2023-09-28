@@ -2,6 +2,7 @@ import SelectDropDown from "./SelectDropDown";
 import PropTypes from "prop-types"; // Import PropTypes
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { checkWordExistence } from "./api";
 const TextBox = ({
   style,
   setShowModal,
@@ -40,25 +41,16 @@ const TextBox = ({
   const [isWordSaved, setIsWordSaved] = useState(false);
 
   useEffect(() => {
-    // Check if the lowercase word exists in the database when the component mounts
-    const checkWordExistence = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5050/savedWord/existSavedWord?textToTranslate=${textToTranslate}`
-        );
-
-        // Set isWordSaved to true or false based on the response
-        setIsWordSaved(response.data.exists);
-      } catch (error) {
-        console.error("Error checking data:", error);
-      }
-    };
-
     // Call the function to check word existence
     if (style === "input" && textToTranslate) {
-      checkWordExistence();
+      checkWordExistence(textToTranslate).then((exists) => {
+        setIsWordSaved(exists);
+      });
+    } else {
+      // Reset isWordSaved to false when textToTranslate is empty
+      setIsWordSaved(false);
     }
-  }, [style, translatedText, textToTranslate]);
+  }, [style, textToTranslate]); // Include textToTranslate as a dependency
 
   return (
     <div className={style}>
