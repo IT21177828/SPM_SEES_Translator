@@ -7,6 +7,8 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
   const [message, setMessage] = useState("");
   const [editingItemId, setEditingItemId] = useState(null); // Track which item is being edited
   const [isWordSaved, setIsWordSaved] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredWords, setFilteredWords] = useState([]);
   const handleEditClick = (id) => {
     setIsEditing(true);
     setEditingItemId(id);
@@ -71,14 +73,31 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
       .catch((err) => console.log(err));
   };
 
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filteredItems = savedWords.filter((item) =>
+      item.textToTranslate.toLowerCase().includes(query)
+    );
+
+    setFilteredWords(filteredItems);
+  };
+
   return (
     <div>
       <h2 className="px-5 text-lg font-medium text-black dark:text-white">
         Favorite
       </h2>
-
+      <input
+        type="text"
+        placeholder="Search"
+        className="w-80 ml-4 p-2 rounded-md border border-gray-300 mx-auto"
+        value={searchQuery}
+        onChange={handleSearch}
+      />
       <ul className="list-none p-2 m-2">
-        {savedWords.map((item) => (
+        {(searchQuery ? filteredWords : savedWords).map((item) => (
           <div key={item._id}>
             <li className="translate-history-item">
               <div className="p-2 flex justify-between items-center mb-5 ">

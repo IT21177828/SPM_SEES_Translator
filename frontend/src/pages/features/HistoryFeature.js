@@ -25,13 +25,25 @@ const HistoryFeature = ({ isOpen, onClose }) => {
       })
       .catch((err) => console.log(err));
   };
-
+  const handleDeleteAll = () => {
+    axios
+      .delete("http://localhost:5050/history/clearAllData")
+      .then((res) => {
+        // Remove the deleted item from the local state
+        setHistory((prevHistory) => prevHistory.filter((item) => item._id));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div>
-      <h2 className="px-5 text-lg font-medium text-black dark:text-white">
-        Translation History
-      </h2>
-
+      <div className="flex justify-between items-center">
+        <h2 className="px-5 text-lg font-medium text-black dark:text-white">
+          Translation History
+        </h2>
+      </div>
+      <button className="float-right mr-4" onClick={handleDeleteAll}>
+        Clear All
+      </button>
       <div className="mt-8 space-y-4">
         <div>
           <ul className="list-none p-2 m-2">
