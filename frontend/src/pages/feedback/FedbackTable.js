@@ -8,19 +8,68 @@ const FeedbackTable = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [updatedFeedback, setUpdatedFeedback] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState({}); // Updated state
+  const [isLogedIn, setIsLogedIn] = useState(false);
 
-  useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      console.log("first");
+      const token = localStorage.getItem("accessToken");
+      const response = await axios
+        .post("http://localhost:5050/user/details", null, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.user) {
+            setUser(res.data.user);
+            setIsLogedIn(true);
+            getData();
+            console.log(res.data.user);
+          } else {
+            setIsLogedIn(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response?.data);
+        });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const getData = async () => {
+    const token = localStorage.getItem("accessToken");
+    // if (user._id) {
+    const userId = user._id;
+    const url = `http://localhost:5050/feedback/user?userId=${userId}`;
+    console.log(url);
     axios
-      .get("http://localhost:5050/feedback")
+      .get(url, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
       .then((data) => {
         setFeedbackData(data.data);
       })
       .catch((error) => console.error("Error fetching feedback data:", error));
-  }, []);
+    // }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [user._id]);
 
   const handleDelete = (id) => {
+    const token = localStorage.getItem("accessToken");
     axios
-      .delete("http://localhost:5050/feedback/delete/" + id)
+      .delete("http://localhost:5050/feedback/delete/" + id, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
       .then(() => {
         setFeedbackData((prevData) =>
           prevData.filter((feedback) => feedback._id !== id)
@@ -41,10 +90,19 @@ const FeedbackTable = () => {
   };
 
   const updateFeedback = () => {
+    const token = localStorage.getItem("accessToken");
     axios
-      .put(`http://localhost:5050/feedback/update/${selectedFeedback._id}`, {
-        feedbackText: updatedFeedback,
-      })
+      .put(
+        `http://localhost:5050/feedback/update/${selectedFeedback._id}`,
+        {
+          feedbackText: updatedFeedback,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then(() => {
         setFeedbackData((prevData) =>
           prevData.map((feedback) =>
