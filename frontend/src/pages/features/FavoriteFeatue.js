@@ -1,9 +1,39 @@
-// TranslationHistory.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import starlogo from "../../assets/star.svg";
+import { checkWordExistence } from "../../components/api";
 const FavoriteFeatue = ({ isOpen, onClose }) => {
   const [savedWords, setSavedWords] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [message, setMessage] = useState("");
+  const [editingItemId, setEditingItemId] = useState(null); // Track which item is being edited
+  const [isWordSaved, setIsWordSaved] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredWords, setFilteredWords] = useState([]);
+  const handleEditClick = (id) => {
+    setIsEditing(true);
+    setEditingItemId(id);
+  };
+
+  const handleSaveClick = () => {
+    setIsEditing(false);
+    axios
+      .put(`http://localhost:5050/savedWord/updateMessage/${editingItemId}`, {
+        message,
+      })
+      .then((result) => {
+        console.log(result);
+        console.log(message);
+        fetchData();
+      })
+      .catch((err) => {
+        console.error("Error updating message:", err);
+        // You can display an error message to the user here if needed
+      });
+  };
+
+  const handleChange = (e) => {
+    setMessage(e.target.value);
+  };
 
   const fetchData = () => {
     axios
@@ -27,63 +57,105 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
     };
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = (textToTranslate) => {
     axios
-      .delete("http://localhost:5050/savedWord/deleteSavedWord/" + id)
+      .delete(
+        `http://localhost:5050/savedWord/delete?textToTranslate=${textToTranslate}`
+      )
       .then((res) => {
         console.log(res);
         // Remove the deleted item from the local state
-        setSavedWords((prevHistory) =>
-          prevHistory.filter((item) => item._id !== id)
-        );
+
+        checkWordExistence(textToTranslate).then((exists) => {
+          setIsWordSaved(exists);
+        });
       })
       .catch((err) => console.log(err));
   };
 
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filteredItems = savedWords.filter((item) =>
+      item.textToTranslate.toLowerCase().includes(query)
+    );
+
+    setFilteredWords(filteredItems);
+  };
+
   return (
     <div>
-      <h2 className="px-5 text-lg font-medium text-white dark:text-white">
-        Favourite
+      <h2 className="px-5 text-lg font-medium text-black dark:text-white">
+        Favorite
       </h2>
-
+      <input
+        type="text"
+        placeholder="Search"
+        className="w-80 ml-4 p-2 rounded-md border border-gray-300 mx-auto"
+        value={searchQuery}
+        onChange={handleSearch}
+      />
       <ul className="list-none p-2 m-2">
-        {savedWords.map((item) => (
-          <li key={item._id} className="translate-history-item">
-            <div className="bg-blue-900 text-white p-2 flex justify-between items-center mb-5 ">
-              <h2 className="text-x1">
-                {item.inputLanguage} <span>&rarr;</span> {item.outputLanguage}
-              </h2>
-              {/* <img
-                className="h-5 w-5"
-                src={starlogo}
-                alt="star"
-                onClick={(e) => handleDelete(item._id)}
-                style={{ cursor: "pointer" }}
-              /> */}
-              <div onClick={(e) => handleDelete(item._id)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  className="w-6 h-6 opacity-60 hover:opacity-80 cursor-pointer fill-red-500 stroke-transparent"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                  />
-                </svg>
+        {(searchQuery ? filteredWords : savedWords).map((item) => (
+          <div key={item._id}>
+            <li className="translate-history-item">
+              <div className="p-2 flex justify-between items-center mb-5 ">
+                <div className="text-x1 bg-blue-400 text-white p-1 rounded">
+                  {item.inputLanguage} <span>&rarr;</span> {item.outputLanguage}
+                </div>
+                <div onClick={() => handleDelete(item.textToTranslate)}>
+                  <span
+                    role="img"
+                    aria-label="Filled Star"
+                    style={{ cursor: "pointer", color: "orange" }}
+                  >
+                    ★
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="original-text text-white opacity-50">
-              <strong>Original Text:</strong> {item.textToTranslate}
-            </div>
-            <div className="translated-text text-white opacity-50">
-              <strong>Translated Text:</strong> {item.translatedText}
+
+              <div className="original-text text-black opacity-50">
+                <strong>Original Text:</strong> {item.textToTranslate}
+              </div>
+              <div className="translated-text text-black opacity-50">
+                <strong>Translated Text:</strong> {item.translatedText}
+              </div>
+            </li>
+            <div className="bg-white p-4 shadow rounded-lg">
+              {isEditing && editingItemId === item._id ? (
+                <>
+                  <textarea
+                    className="w-full min-h-[100px] border border-gray-300 p-2 rounded"
+                    value={message}
+                    onChange={handleChange}
+                  />
+                  <button
+                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={handleSaveClick}
+                  >
+                    Save
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="whitespace-pre-wrap break-words">
+                    <span className="text-black opacity-50">Note:</span>
+                    <br />
+                    {item.message}
+                  </div>
+                  <button
+                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={() => handleEditClick(item._id)}
+                  >
+                    Edit
+                  </button>
+                </>
+              )}
             </div>
             <hr className="my-2 border-blue-500 mt-7 opacity-30" />{" "}
             {/* Separator line */}
-          </li>
+          </div>
         ))}
       </ul>
     </div>

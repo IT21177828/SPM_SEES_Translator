@@ -190,10 +190,21 @@ export default function Translate() {
         englishWord: feedback.englishWord,
         sinhalaWord: feedback.sinhalaWord,
         feedbackText: feedback.feedbackText,
+        user_Id: user._id,
+      
       };
+console.log(user._id)
+const token = localStorage.getItem("accessToken");
       const response = await axios.post(
         "http://localhost:5050/feedback/translation",
-        feedbackData
+        feedbackData,{
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+
+        }
+         
+        
       ); // Update the URL as needed
 
       // Check if the submission was successful
@@ -382,7 +393,7 @@ export default function Translate() {
 
               {user._id ? (
                 <div className="relative w-full h-fit">
-                  <a
+                <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
