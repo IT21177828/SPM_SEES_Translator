@@ -5,12 +5,14 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: "Gmail", // Use the appropriate email service
-  auth: {
-    user: "bpathum@gmail.com", // Replace with your email address
-    pass: "pgfliawbkmllcenm", // Replace with your email password or an app-specific password
-  },
-});
+
+    service: 'Gmail', // Use the appropriate email service
+    auth: {
+      user: '', // Replace with your email address
+      pass: '', // Replace with your email password or an app-specific password
+    },
+  });
+
 
 export const userModel = mongoose.model("user", userSchema);
 

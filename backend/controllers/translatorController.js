@@ -14,13 +14,15 @@ const language = async (req, res) => {
   // };
 
   const options = {
-    method: "GET",
-    url: "https://google-translate1.p.rapidapi.com/language/translate/v2/languages",
+    method: 'GET',
+    url: 'https://google-translate1.p.rapidapi.com/language/translate/v2/languages',
     headers: {
-      "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Key": "4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19",
-      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
-    },
+
+      'Accept-Encoding': 'application/gzip',
+      'X-RapidAPI-Key': '4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19',
+      'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+    }
+
   };
 
   try {
@@ -37,6 +39,23 @@ const language = async (req, res) => {
   } catch (error) {
     console.error(error);
   }
+
+  // const options = {
+  //   method: 'GET',
+  //   url: 'https://google-translate1.p.rapidapi.com/language/translate/v2/languages',
+  //   headers: {
+  //     'Accept-Encoding': 'application/gzip',
+  //     'X-RapidAPI-Key': '4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19',
+  //     'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+  //   }
+  // };
+  
+  // try {
+  //   const response = await axios.request(options);
+  //   console.log(response.data);
+  // } catch (error) {
+  //   console.error(error);
+  // }
 
   // const options = {
   //   method: "GET",
@@ -95,17 +114,18 @@ const translate =
     // };
 
     const options = {
-      method: "POST",
-      url: "https://google-translate1.p.rapidapi.com/language/translate/v2",
+      method: 'POST',
+      url: 'https://google-translate1.p.rapidapi.com/language/translate/v2',
       headers: {
-        "content-type": "application/x-www-form-urlencoded",
-        "Accept-Encoding": "application/gzip",
-        "X-RapidAPI-Key": "4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19",
-        "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept-Encoding': 'application/gzip',
+        'X-RapidAPI-Key': '4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19',
+        'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+
       },
       data: encodedParams,
     };
-    
 
     try {
       const response = await axios.request(options);      

@@ -393,7 +393,7 @@ const token = localStorage.getItem("accessToken");
 
               {user._id ? (
                 <div className="relative w-full h-fit">
-                  <a
+                <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();

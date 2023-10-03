@@ -14,45 +14,40 @@ export const userModel = mongoose.model("user",user)
 
 //acivate new membership
 export async function activateMembership(req, res){
-    const {name} = req.body;
+    const {email,name} = req.body;
 
     let membershipType = new membershipTypeModel();
     let user = new userModel();
 
     membershipType.name = name;
-    // user.
+    user.email = email;
 
-    
 
     try{
-
-        // Check if membership type already exists
+        const userObject = await userModel.findOne({email : req.body.email});
         const existingMembershipTypeModel = await membershipTypeModel.findOne({ name: req.body.name });
+        
 
-  
         if (existingMembershipTypeModel) {
 
-            console.log("wd");
-
-            // No existing membership type with the same name, proceed to save
             let membershipModel = new membershipModell();
 
-
-            console.log("dcdscdqcvqcvevcwv");
+            membershipModel.user = userObject.firstName;
             membershipModel.membershipType = existingMembershipTypeModel._id;
             membershipModel.startDate = new Date();
             membershipModel.endDate = new Date();
             membershipModel.endDate.setDate(membershipModel.endDate.getDate() + existingMembershipTypeModel.duration);
             membershipModel.status = "active";
 
-
             await membershipModel.save();
+
             res.send(membershipModel);
         }else{
             return res.status(400).json({
                 error: "Membership Type does not exist"
             });
         }
+
     }catch(err){
         res.status(500).json({ error: "Something went wrong" });
     }

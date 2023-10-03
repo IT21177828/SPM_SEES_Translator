@@ -25,19 +25,31 @@ const HistoryFeature = ({ isOpen, onClose }) => {
       })
       .catch((err) => console.log(err));
   };
-
+  const handleDeleteAll = () => {
+    axios
+      .delete("http://localhost:5050/history/clearAllData")
+      .then((res) => {
+        // Remove the deleted item from the local state
+        setHistory((prevHistory) => prevHistory.filter((item) => item._id));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div>
-      <h2 className="px-5 text-lg font-medium text-white dark:text-white">
-        Translation History
-      </h2>
-
+      <div className="flex justify-between items-center">
+        <h2 className="px-5 text-lg font-medium text-black dark:text-white">
+          Translation History
+        </h2>
+      </div>
+      <button className="float-right mr-4" onClick={handleDeleteAll}>
+        Clear All
+      </button>
       <div className="mt-8 space-y-4">
         <div>
           <ul className="list-none p-2 m-2">
             {history.map((item) => (
               <li key={item._id} className="translate-history-item pt-1">
-                <div className="bg-blue-900 text-white p-2 flex justify-between items-center mb-5 ">
+                <div className="bg-blue-400 text-white p-2 flex justify-between items-center mb-2 rounded">
                   <h2 className="text-x1 opacity-70">
                     {item.inputLanguage} <span>&rarr;</span>{" "}
                     {item.outputLanguage}
@@ -50,10 +62,10 @@ const HistoryFeature = ({ isOpen, onClose }) => {
                     style={{ cursor: "pointer" }}
                   />
                 </div>
-                <div className="original-text text-white opacity-50">
+                <div className="original-text text-black opacity-50">
                   <strong>Original Text:</strong> {item.textToTranslate}
                 </div>
-                <div className="translated-text text-white opacity-50">
+                <div className="translated-text text-black opacity-50">
                   <strong>Translated Text:</strong> {item.translatedText}
                 </div>
                 <hr className="my-2 border-blue-500 mt-7 opacity-30" />{" "}
