@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { checkWordExistence } from "../../components/api";
-const FavoriteFeatue = ({ isOpen, onClose }) => {
+const FavoriteFeatue = (userId) => {
   const [savedWords, setSavedWords] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
@@ -9,6 +9,7 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
   const [isWordSaved, setIsWordSaved] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredWords, setFilteredWords] = useState([]);
+  const user = userId.userId;
   const handleEditClick = (id) => {
     setIsEditing(true);
     setEditingItemId(id);
@@ -23,7 +24,7 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
       .then((result) => {
         console.log(result);
         console.log(message);
-        fetchData();
+        getDetails();
       })
       .catch((err) => {
         console.error("Error updating message:", err);
@@ -35,26 +36,30 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
     setMessage(e.target.value);
   };
 
-  const fetchData = () => {
-    axios
-      .get("http://localhost:5050/savedWord/getSavedWord")
-      .then((response) => {
-        setSavedWords(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching saved words:", error);
-      });
-  };
+  async function getDetails() {
+    const id = { user };
+
+    try {
+      console.log(id);
+      const posts = await axios
+        .get("http://localhost:5050/savedWord/getSavedWord", {
+          params: id,
+        })
+
+        .then((response) => {
+          setSavedWords(response.data.response);
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err.response?.data?.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    fetchData();
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 2000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
+    getDetails();
   }, []);
 
   const handleDelete = (textToTranslate) => {
@@ -101,7 +106,7 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
           <div key={item._id}>
             <li className="translate-history-item">
               <div className="p-2 flex justify-between items-center mb-5 ">
-                <div className="text-x1 bg-blue-400 text-white p-1 rounded">
+                <div className="text-x1 bg-blue-600 text-black p-1 rounded dark:text-white">
                   {item.inputLanguage} <span>&rarr;</span> {item.outputLanguage}
                 </div>
                 <div onClick={() => handleDelete(item.textToTranslate)}>
@@ -115,18 +120,18 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="original-text text-black opacity-50">
+              <div className="original-text text-black opacity-50 dark:text-white">
                 <strong>Original Text:</strong> {item.textToTranslate}
               </div>
-              <div className="translated-text text-black opacity-50">
+              <div className="translated-text text-black opacity-50 dark:text-white mb-2">
                 <strong>Translated Text:</strong> {item.translatedText}
               </div>
             </li>
-            <div className="bg-white p-4 shadow rounded-lg">
+            <div className="p-4 shadow rounded-lg bg-blue border border-white">
               {isEditing && editingItemId === item._id ? (
                 <>
                   <textarea
-                    className="w-full min-h-[100px] border border-gray-300 p-2 rounded"
+                    className="w-full min-h-[100px] border border-gray-300 p-2 rounded dark:text-white"
                     value={message}
                     onChange={handleChange}
                   />
@@ -140,16 +145,31 @@ const FavoriteFeatue = ({ isOpen, onClose }) => {
               ) : (
                 <>
                   <div className="whitespace-pre-wrap break-words">
-                    <span className="text-black opacity-50">Note:</span>
+                    <span className="text-black opacity-50 dark:text-white">
+                      Note:
+                    </span>
                     <br />
-                    {item.message}
+                    <div className="dark:text-white">{item.message}</div>
                   </div>
-                  <button
-                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={() => handleEditClick(item._id)}
-                  >
-                    Edit
-                  </button>
+                  <div className="relative">
+                    <button
+                      className="mt-2 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-600 flex  absolute bottom-5 right-0 mt-2"
+                      onClick={() => handleEditClick(item._id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 13.293a1 1 0 011.414 0L12 4.414 9.414 2 2 9.414l2.293 2.293zM3 10.586l8-8L18.586 8 10 16H3v-5.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </>
               )}
             </div>

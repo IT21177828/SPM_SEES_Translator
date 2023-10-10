@@ -2,18 +2,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import deletelogo from "../../assets/delete.svg";
-const HistoryFeature = ({ isOpen, onClose }) => {
+const HistoryFeature = (userId) => {
   const [history, setHistory] = useState([]);
+  const user = userId.userId;
 
+  async function getDetails() {
+    const id = { user };
+
+    try {
+      const posts = await axios
+        .get("http://localhost:5050/history/getHistory", {
+          params: id,
+        })
+        .then((response) => {
+          setHistory(response.data.response);
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err.response?.data?.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
-    fetch("http://localhost:5050/history/getHistory")
-      .then((response) => response.json())
-      .then((data) => {
-        setHistory(data);
-      })
-      .catch((error) => console.error(error));
+    getDetails();
   }, []);
-
   const handleDelete = (id) => {
     axios
       .delete("http://localhost:5050/history/deleteHistory/" + id)
@@ -49,8 +63,8 @@ const HistoryFeature = ({ isOpen, onClose }) => {
           <ul className="list-none p-2 m-2">
             {history.map((item) => (
               <li key={item._id} className="translate-history-item pt-1">
-                <div className="bg-blue-400 text-white p-2 flex justify-between items-center mb-2 rounded">
-                  <h2 className="text-x1 opacity-70">
+                <div className="bg-blue-600 text-black p-2 flex justify-between items-center mb-2 rounded dark:text-white">
+                  <h2 className="text-x1 opacity-70 dark:text-white">
                     {item.inputLanguage} <span>&rarr;</span>{" "}
                     {item.outputLanguage}
                   </h2>
@@ -62,10 +76,10 @@ const HistoryFeature = ({ isOpen, onClose }) => {
                     style={{ cursor: "pointer" }}
                   />
                 </div>
-                <div className="original-text text-black opacity-50">
+                <div className="original-text text-black opacity-50 dark:text-white">
                   <strong>Original Text:</strong> {item.textToTranslate}
                 </div>
-                <div className="translated-text text-black opacity-50">
+                <div className="translated-text text-black opacity-50 dark:text-white">
                   <strong>Translated Text:</strong> {item.translatedText}
                 </div>
                 <hr className="my-2 border-blue-500 mt-7 opacity-30" />{" "}
