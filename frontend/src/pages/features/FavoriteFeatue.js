@@ -59,23 +59,48 @@ const FavoriteFeatue = (userId) => {
   }
 
   useEffect(() => {
-    getDetails();
+    const refreshInterval = 1000; // 10 seconds in milliseconds
+
+    const fetchData = async () => {
+      try {
+        await getDetails();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData(); // Fetch data immediately when the component mounts
+
+    const intervalId = setInterval(fetchData, refreshInterval); // Set up the interval
+
+    return () => clearInterval(intervalId); // Clean up the interval when the component unmounts
   }, []);
 
   const handleDelete = (textToTranslate) => {
-    axios
-      .delete(
-        `http://localhost:5050/savedWord/delete?textToTranslate=${textToTranslate}`
-      )
-      .then((res) => {
-        console.log(res);
-        // Remove the deleted item from the local state
+    // Show a confirmation dialog
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
 
-        checkWordExistence(textToTranslate).then((exists) => {
-          setIsWordSaved(exists);
-        });
-      })
-      .catch((err) => console.log(err));
+    if (confirmation) {
+      // User clicked "OK," proceed with the deletion
+      axios
+        .delete(
+          `http://localhost:5050/savedWord/delete?textToTranslate=${textToTranslate}`
+        )
+        .then((res) => {
+          console.log(res);
+          // Remove the deleted item from the local state
+
+          checkWordExistence(textToTranslate).then((exists) => {
+            setIsWordSaved(exists);
+          });
+        })
+        .catch((err) => console.log(err));
+    } else {
+      // User clicked "Cancel," do nothing
+      console.log("Deletion canceled.");
+    }
   };
 
   const handleSearch = (e) => {

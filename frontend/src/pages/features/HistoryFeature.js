@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import deletelogo from "../../assets/delete.svg";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 const HistoryFeature = (userId) => {
   const [history, setHistory] = useState([]);
   const user = userId.userId;
@@ -26,28 +28,91 @@ const HistoryFeature = (userId) => {
     }
   }
   useEffect(() => {
-    getDetails();
+    const refreshInterval = 1000; // 10 seconds in milliseconds
+
+    const fetchData = async () => {
+      try {
+        await getDetails();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData(); // Fetch data immediately when the component mounts
+
+    const intervalId = setInterval(fetchData, refreshInterval); // Set up the interval
+
+    return () => clearInterval(intervalId); // Clean up the interval when the component unmounts
   }, []);
+
   const handleDelete = (id) => {
-    axios
-      .delete("http://localhost:5050/history/deleteHistory/" + id)
-      .then((res) => {
-        // Remove the deleted item from the local state
-        setHistory((prevHistory) =>
-          prevHistory.filter((item) => item._id !== id)
-        );
-      })
-      .catch((err) => console.log(err));
+    // Show a confirmation dialog
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+
+    if (confirmation) {
+      // User clicked "OK," proceed with the deletion
+      axios
+        .delete("http://localhost:5050/history/deleteHistory/" + id)
+        .then((res) => {
+          // Remove the deleted item from the local state
+          setHistory((prevHistory) =>
+            prevHistory.filter((item) => item._id !== id)
+          );
+        })
+        .catch((err) => console.log(err));
+    } else {
+      // User clicked "Cancel," do nothing
+      console.log("Deletion canceled.");
+    }
   };
+
   const handleDeleteAll = () => {
-    axios
-      .delete("http://localhost:5050/history/clearAllData")
-      .then((res) => {
-        // Remove the deleted item from the local state
-        setHistory((prevHistory) => prevHistory.filter((item) => item._id));
-      })
-      .catch((err) => console.log(err));
+    // Show a confirmation dialog
+    const confirmation = window.confirm(
+      "Are you sure you want to delete all items?"
+    );
+
+    if (confirmation) {
+      // User clicked "OK," proceed with the deletion
+      axios
+        .delete("http://localhost:5050/history/clearAllData")
+        .then((res) => {
+          // Remove all items from the local state
+          setHistory([]);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      // User clicked "Cancel," do nothing
+      console.log("Deletion canceled.");
+    }
   };
+  const generateHistoryReport = () => {
+    const doc = new jsPDF();
+    doc.setFont("Sinhala");
+    const tableColumn = [
+      "Input Language",
+      "Output Language",
+      "Input Text",
+      "Translated Text (Sinhala)", // Updated column name
+    ];
+    const tableRows = [];
+
+    history.forEach((history) => {
+      const rowData = [
+        history.inputLanguage || "N/A",
+        history.outputLanguage || "N/A",
+        history.textToTranslate || "N/A",
+        history.translatedText || "සිංහල අකුර", // Update this with the actual Sinhala word
+      ];
+      tableRows.push(rowData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    doc.save("History_Report.pdf");
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -55,7 +120,10 @@ const HistoryFeature = (userId) => {
           Translation History
         </h2>
       </div>
-      <button className="float-right mr-4" onClick={handleDeleteAll}>
+      <button
+        className="float-right mr-4 dark:text-white"
+        onClick={handleDeleteAll}
+      >
         Clear All
       </button>
       <div className="mt-8 space-y-4">
@@ -89,6 +157,12 @@ const HistoryFeature = (userId) => {
           </ul>
         </div>
       </div>
+      <button
+        className="fixed bottom-0 left-30 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+        onClick={generateHistoryReport}
+      >
+        Download PDF
+      </button>
     </div>
   );
 };
