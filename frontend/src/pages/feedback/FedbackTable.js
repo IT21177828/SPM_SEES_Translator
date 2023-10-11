@@ -7,7 +7,8 @@ const FeedbackTable = () => {
   const [feedbackData, setFeedbackData] = useState([]);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [updatedFeedback, setUpdatedFeedback] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [user, setUser] = useState({ _id: null });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -55,17 +56,23 @@ const FeedbackTable = () => {
   };
 
   const handleDelete = (id) => {
+    setIsDeleteModalOpen(true);
+    setSelectedFeedback(id);
+  };
+
+  const confirmDelete = () => {
     const token = localStorage.getItem("accessToken");
     axios
-      .delete(`http://localhost:5050/feedback/delete/${id}`, {
+      .delete(`http://localhost:5050/feedback/delete/${selectedFeedback}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
         setFeedbackData((prevData) =>
-          prevData.filter((feedback) => feedback._id !== id)
+          prevData.filter((feedback) => feedback._id !== selectedFeedback)
         );
+        setIsDeleteModalOpen(false); // Close the delete confirmation modal
       })
       .catch((err) => console.log(err));
   };
@@ -73,12 +80,13 @@ const FeedbackTable = () => {
   const handleUpdate = (feedback) => {
     setSelectedFeedback(feedback);
     setUpdatedFeedback(feedback.feedbackText);
-    setIsModalOpen(true);
+    setIsUpdateModalOpen(true);
   };
 
   const closeModal = () => {
     setSelectedFeedback(null);
-    setIsModalOpen(false);
+    setIsUpdateModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   const updateFeedback = () => {
@@ -175,8 +183,7 @@ const FeedbackTable = () => {
         </tbody>
       </table>
 
-      {/* Modal for updating feedback */}
-      {selectedFeedback && isModalOpen && (
+      {isUpdateModalOpen && selectedFeedback && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="modal bg-white rounded shadow-md p-6 w-96">
             <span
@@ -212,8 +219,45 @@ const FeedbackTable = () => {
           </div>
         </div>
       )}
+
+      {isDeleteModalOpen && selectedFeedback && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="modal bg-white rounded shadow-md p-6 w-96">
+            <span
+              className="close text-gray-600 text-2xl absolute top-0 right-0 mr-4 mt-2 cursor-pointer"
+              onClick={closeModal}
+            >
+              &times;
+            </span>
+            <center>
+              <h2 className="text-xl font-semibold mb-4">Delete Feedback</h2>
+            </center>
+            <div className="mt-2">
+              <p className="text-sm text-gray-500">
+                Are you sure you want to delete this feedback? This action cannot be undone.
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default FeedbackTable;
+
+
