@@ -8,7 +8,7 @@ const FeedbackTable = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [updatedFeedback, setUpdatedFeedback] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState({ _id: null }); // Initialize user with a default _id
+  const [user, setUser] = useState({ _id: null });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
