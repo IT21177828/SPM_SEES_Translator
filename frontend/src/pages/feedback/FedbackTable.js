@@ -8,32 +8,31 @@ const FeedbackTable = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [updatedFeedback, setUpdatedFeedback] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState({}); // Updated state
-  const [isLogedIn, setIsLogedIn] = useState(false);
+  const [user, setUser] = useState({ _id: null }); // Initialize user with a default _id
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (!user._id) {
+      fetchUserData();
+    } else {
+      getData();
+    }
+  }, [user]);
 
   const fetchUserData = async () => {
     try {
-      console.log("first");
       const token = localStorage.getItem("accessToken");
-      const response = await axios
-        .post("http://localhost:5050/user/details", null, {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.user) {
-            setUser(res.data.user);
-            setIsLogedIn(true);
-            getData();
-            console.log(res.data.user);
-          } else {
-            setIsLogedIn(false);
-          }
-        })
-        .catch((err) => {
-          console.log(err.response?.data);
-        });
+      const res = await axios.post("http://localhost:5050/user/details", null, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.user) {
+        setUser(res.data.user);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -41,10 +40,8 @@ const FeedbackTable = () => {
 
   const getData = async () => {
     const token = localStorage.getItem("accessToken");
-    // if (user._id) {
     const userId = user._id;
     const url = `http://localhost:5050/feedback/user?userId=${userId}`;
-    console.log(url);
     axios
       .get(url, {
         headers: {
@@ -55,17 +52,12 @@ const FeedbackTable = () => {
         setFeedbackData(data.data);
       })
       .catch((error) => console.error("Error fetching feedback data:", error));
-    // }
   };
-
-  useEffect(() => {
-    fetchUserData();
-  }, [user._id]);
 
   const handleDelete = (id) => {
     const token = localStorage.getItem("accessToken");
     axios
-      .delete("http://localhost:5050/feedback/delete/" + id, {
+      .delete(`http://localhost:5050/feedback/delete/${id}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
