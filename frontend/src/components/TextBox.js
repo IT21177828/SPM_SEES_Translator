@@ -9,8 +9,10 @@ const TextBox = ({
   textToTranslate,
   translatedText,
   setTranslatedText,
-  outputLanguage, 
-  inputLanguage, 
+
+  outputLanguage,
+  inputLanguage,
+  userId,
 
 }) => {
   const handleClick = () => {
@@ -33,9 +35,12 @@ const TextBox = ({
         });
         console.log('Existing data deleted successfully');
       } else {
-        // Data doesn't exist, insert it
-        await axios.post('http://localhost:5050/savedWord/saved', dataToSave);
-        console.log('New data saved successfully');   
+
+        // If the word is not saved, save it to the database
+        await axios.post("http://localhost:5050/savedWord/saved", dataToSave);
+        console.log(dataToSave);
+        setIsWordSaved(true); // Toggle the state to filled
+
       }
     } catch (error) {
       console.error('Error storing or deleting data:', error);
@@ -64,22 +69,32 @@ const TextBox = ({
           ˟
         </div>
       )}
-      {style === 'output' && (
-  <div
-    className="saved relative bottom-32 left-60 cursor-pointer"
-    onClick={() => {
-      const dataToSave = {
-        textToTranslate,
-        outputLanguage,
-        inputLanguage,
-        translatedText,
-      };
-      storeSavedWord(dataToSave);
-    }}
-  >
-    ⭐️
-  </div>
-)}
+
+      {style === "output" && translatedText && (
+        <div
+          className="saved relative bottom-8 left-60 cursor-pointer"
+          onClick={() => {
+            const dataToSave = {
+              name: userId,
+              textToTranslate,
+              outputLanguage,
+              inputLanguage,
+              translatedText,
+            };
+            toggleSavedWord(dataToSave);
+          }}
+        >
+          {isWordSaved ? (
+            <span role="img" aria-label="Filled Star">
+              ⭐️
+            </span>
+          ) : (
+            <span role="img" aria-label="Empty Star">
+              ☆
+            </span>
+          )}
+        </div>
+      )}
 
     </div>
   );
@@ -96,6 +111,7 @@ TextBox.propTypes = {
   setTranslatedText: PropTypes.func.isRequired,
   outputLanguage: PropTypes.string.isRequired, 
   inputLanguage: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 export default TextBox;

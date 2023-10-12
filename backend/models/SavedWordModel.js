@@ -1,7 +1,8 @@
 import mongoose from "../db/conn.js";
 const savedWord = new mongoose.Schema({
-   
-    
+
+  userID: String,
+
   inputLanguage: String,
   outputLanguage: String,
   textToTranslate: String,

@@ -149,7 +149,7 @@ export default function Translate() {
       setTranslatedText(response.data);
 
       const dataToStore = { ...data, translatedText: response.data };
-
+      console.log(dataToStore);
       storeTranslationData(dataToStore);
     } catch (error) {
       console.error("Error translating:", error);
@@ -158,7 +158,14 @@ export default function Translate() {
   //Save History
   const storeTranslationData = async (data) => {
     try {
-      await axios.post("http://localhost:5050/history/save", data);
+      const name = user._id; // Assuming 'name' is in data object received as a parameter
+      const translationData = data; // Assuming 'translationData' is in data object received as a parameter
+
+      const resp = { name, ...translationData }; // Spread 'name' and 'translationData' into 'resp'
+      console.log(resp);
+      console.log("Translation data:", resp);
+
+      await axios.post("http://localhost:5050/history/save", resp);
       console.log("Translation data stored successfully");
     } catch (error) {
       console.error("Error storing translation data:", error);
@@ -191,20 +198,17 @@ export default function Translate() {
         sinhalaWord: feedback.sinhalaWord,
         feedbackText: feedback.feedbackText,
         user_Id: user._id,
-      
       };
-console.log(user._id)
-const token = localStorage.getItem("accessToken");
+      console.log(user._id);
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post(
         "http://localhost:5050/feedback/translation",
-        feedbackData,{
+        feedbackData,
+        {
           headers: {
             authorization: `Bearer ${token}`,
           },
-
         }
-         
-        
       ); // Update the URL as needed
 
       // Check if the submission was successful
@@ -514,7 +518,7 @@ const token = localStorage.getItem("accessToken");
                 <div className="relative">
                   <CloseBtn closeBanner={closeBanner} />
                 </div>
-                <HistoryFeature />
+                <HistoryFeature userId={user._id} />
               </div>
             ) : (
               ""
@@ -524,7 +528,7 @@ const token = localStorage.getItem("accessToken");
                 <div className="relative">
                   <CloseBtn closeBanner={closeBanner} />
                 </div>
-                <FavoriteFeatue />{" "}
+                <FavoriteFeatue userId={user._id} />{" "}
               </div>
             ) : (
               ""
@@ -554,6 +558,7 @@ const token = localStorage.getItem("accessToken");
                 setTranslatedText={setTranslatedText}
                 outputLanguage={outputLanguage}
                 inputLanguage={inputLanguage}
+                userId={user._id}
               />
               <div className="arrow-container" onClick={handleClick}>
                 <Arrows />
@@ -568,6 +573,7 @@ const token = localStorage.getItem("accessToken");
                 textToTranslate={textToTranslate}
                 outputLanguage={outputLanguage}
                 inputLanguage={inputLanguage}
+                userId={user._id}
               />
               <div className="button-container" onClick={translate}>
                 <Button />
