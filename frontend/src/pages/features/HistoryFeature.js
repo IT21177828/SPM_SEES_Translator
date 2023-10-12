@@ -68,6 +68,7 @@ const HistoryFeature = (userId) => {
     }
   };
 
+
   const handleDeleteAll = () => {
     // Show a confirmation dialog
     const confirmation = window.confirm(
@@ -126,13 +127,16 @@ const HistoryFeature = (userId) => {
       >
         Clear All
       </button>
+
       <div className="mt-8 space-y-4">
         <div>
           <ul className="list-none p-2 m-2">
             {history.map((item) => (
               <li key={item._id} className="translate-history-item pt-1">
+
                 <div className="bg-blue-600 text-black p-2 flex justify-between items-center mb-2 rounded dark:text-white">
                   <h2 className="text-x1 opacity-70 dark:text-white">
+
                     {item.inputLanguage} <span>&rarr;</span>{" "}
                     {item.outputLanguage}
                   </h2>
@@ -144,10 +148,12 @@ const HistoryFeature = (userId) => {
                     style={{ cursor: "pointer" }}
                   />
                 </div>
+
                 <div className="original-text text-black opacity-50 dark:text-white">
                   <strong>Original Text:</strong> {item.textToTranslate}
                 </div>
                 <div className="translated-text text-black opacity-50 dark:text-white">
+
                   <strong>Translated Text:</strong> {item.translatedText}
                 </div>
                 <hr className="my-2 border-blue-500 mt-7 opacity-30" />{" "}

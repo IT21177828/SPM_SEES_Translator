@@ -1,8 +1,6 @@
-import SelectDropDown from "./SelectDropDown";
-import PropTypes from "prop-types"; // Import PropTypes
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { checkWordExistence } from "./api";
+import SelectDropDown from './SelectDropDown';
+import PropTypes from 'prop-types'; // Import PropTypes
+import axios from 'axios';  
 const TextBox = ({
   style,
   setShowModal,
@@ -11,48 +9,46 @@ const TextBox = ({
   textToTranslate,
   translatedText,
   setTranslatedText,
+
   outputLanguage,
   inputLanguage,
   userId,
+
 }) => {
   const handleClick = () => {
-    setTextToTranslate(""); // Clear the input text
-    setTranslatedText(""); // Clear the translated text
+    setTextToTranslate(''); // Clear the input text
+    setTranslatedText(''); // Clear the translated text
   };
-
-  // Store or Remove Saved Word
-  const toggleSavedWord = async (dataToSave) => {
+  
+  //Store Saved Word
+  const storeSavedWord = async (dataToSave) => {
     try {
-      if (isWordSaved) {
-        // If the word is saved, remove it from the database
-        await axios.delete(
-          `http://localhost:5050/savedWord/delete?textToTranslate=${textToTranslate}`
-        );
-        setIsWordSaved(false); // Toggle the state to unfilled
+      // Check if the data already exists in the database
+      const existingDataResponse = await axios.get('http://localhost:5050/savedWord/existSavedWord/', {
+  params: { textToTranslate: dataToSave.textToTranslate }, // Provide the parameter correctly
+});
+
+      if (existingDataResponse.data.exists) {
+        // Data exists, so delete it
+        await axios.delete('http://localhost:5050/savedWord/delete/', {
+          params: { textToTranslate: dataToSave.textToTranslate }, // Send the data to delete as parameters
+        });
+        console.log('Existing data deleted successfully');
       } else {
+
         // If the word is not saved, save it to the database
         await axios.post("http://localhost:5050/savedWord/saved", dataToSave);
         console.log(dataToSave);
         setIsWordSaved(true); // Toggle the state to filled
+
       }
     } catch (error) {
-      console.error("Error storing or deleting data:", error);
+      console.error('Error storing or deleting data:', error);
     }
   };
+  
+  
 
-  const [isWordSaved, setIsWordSaved] = useState(false);
-
-  useEffect(() => {
-    // Call the function to check word existence
-    if (style === "input" && textToTranslate) {
-      checkWordExistence(textToTranslate).then((exists) => {
-        setIsWordSaved(exists);
-      });
-    } else {
-      // Reset isWordSaved to false when textToTranslate is empty
-      setIsWordSaved(false);
-    }
-  }, [style, textToTranslate]); // Include textToTranslate as a dependency
 
   return (
     <div className={style}>
@@ -62,17 +58,18 @@ const TextBox = ({
         selectedLanguage={selectedLanguage}
       />
       <textarea
-        disabled={style === "output"}
+        disabled={style === 'output'}
         className={style}
-        placeholder={style === "input" ? "Enter text" : "Translation"}
+        placeholder={style === 'input' ? 'Enter text' : 'Translation'}
         onChange={(e) => setTextToTranslate(e.target.value)}
-        value={style === "input" ? textToTranslate : translatedText}
+        value={style === 'input' ? textToTranslate : translatedText}
       />
-      {style === "input" && (
+      {style === 'input' && (
         <div className="delete" onClick={handleClick}>
           ˟
         </div>
       )}
+
       {style === "output" && translatedText && (
         <div
           className="saved relative bottom-8 left-60 cursor-pointer"
@@ -98,6 +95,7 @@ const TextBox = ({
           )}
         </div>
       )}
+
     </div>
   );
 };
@@ -111,7 +109,7 @@ TextBox.propTypes = {
   textToTranslate: PropTypes.string.isRequired,
   translatedText: PropTypes.string.isRequired,
   setTranslatedText: PropTypes.func.isRequired,
-  outputLanguage: PropTypes.string.isRequired,
+  outputLanguage: PropTypes.string.isRequired, 
   inputLanguage: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
 };

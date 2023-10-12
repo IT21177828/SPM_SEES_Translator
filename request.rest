@@ -52,7 +52,7 @@ Content-Type: application/json
 {
     "params":{
     "name" : "Kylle",
-    "textToTranslate" :  "Thisggඅම්මාggg is cake time with Apple apappleple Cake banana AppApplePeach"
+    "textToTranslate" :  "Thisggggg is cake time"
 }}
 
 ###
