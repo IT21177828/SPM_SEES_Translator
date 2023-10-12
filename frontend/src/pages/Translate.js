@@ -573,12 +573,12 @@ const token = localStorage.getItem("accessToken");
                 <Button />
               </div>
               {/* Add a feedback button */}
-              <button
-                className="feedback-button"
-                onClick={handleFeedbackModalOpen}
-              >
-                Provide Feedback
-              </button>
+              {isLogedIn && (
+  <button className="feedback-button" onClick={handleFeedbackModalOpen}>
+    Provide Feedback
+  </button>
+)}
+
             </>
           )}
           {showDropdownModal && (

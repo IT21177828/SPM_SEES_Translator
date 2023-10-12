@@ -1,7 +1,7 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import axios from "axios";
 
 const FeedbackTable = () => {
   const [feedbackData, setFeedbackData] = useState([]);
@@ -9,6 +9,7 @@ const FeedbackTable = () => {
   const [updatedFeedback, setUpdatedFeedback] = useState("");
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
   const [user, setUser] = useState({ _id: null });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -72,7 +73,7 @@ const FeedbackTable = () => {
         setFeedbackData((prevData) =>
           prevData.filter((feedback) => feedback._id !== selectedFeedback)
         );
-        setIsDeleteModalOpen(false); // Close the delete confirmation modal
+        setIsDeleteModalOpen(false);
       })
       .catch((err) => console.log(err));
   };
@@ -90,6 +91,7 @@ const FeedbackTable = () => {
   };
 
   const updateFeedback = () => {
+    setIsProcessingUpdate(true);
     const token = localStorage.getItem("accessToken");
     axios
       .put(
@@ -111,9 +113,13 @@ const FeedbackTable = () => {
               : feedback
           )
         );
+        setIsProcessingUpdate(false);
         closeModal();
       })
-      .catch((error) => console.error("Error updating feedback:", error));
+      .catch((error) => {
+        setIsProcessingUpdate(false);
+        console.error("Error updating feedback:", error);
+      });
   };
 
   const generateFeedbackReport = () => {
@@ -173,8 +179,22 @@ const FeedbackTable = () => {
               <div className="flex justify-center">
                 <button
                   onClick={generateFeedbackReport}
-                  className="bg-black hover:bg-black-700 text-white font-bold py-4 px-4 rounded"
+                  className="bg-black hover:bg-black-700 text-white font-bold py-4 px-4 rounded flex items-center space-x-2"
                 >
+                  <svg
+                    className="animate-bounce w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                    ></path>
+                  </svg>
                   Generate Feedback Report
                 </button>
               </div>
@@ -206,8 +226,29 @@ const FeedbackTable = () => {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                 onClick={updateFeedback}
+                disabled={isProcessingUpdate}
               >
-                Update Feedback
+                {isProcessingUpdate ? (
+                  <div className="flex items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                      ></path>
+                    </svg>
+                    Processing...
+                  </div>
+                ) : (
+                  "Update Feedback"
+                )}
               </button>
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
@@ -234,7 +275,8 @@ const FeedbackTable = () => {
             </center>
             <div className="mt-2">
               <p className="text-sm text-gray-500">
-                Are you sure you want to delete this feedback? This action cannot be undone.
+                Are you sure you want to delete this feedback? This action
+                cannot be undone.
               </p>
             </div>
             <div className="flex justify-end">
@@ -259,5 +301,3 @@ const FeedbackTable = () => {
 };
 
 export default FeedbackTable;
-
-
