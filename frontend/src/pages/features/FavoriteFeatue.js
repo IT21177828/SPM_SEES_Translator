@@ -1,7 +1,5 @@
-// TranslationHistory.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
 import { checkWordExistence } from "../../components/api";
 const FavoriteFeatue = (userId) => {
   const [savedWords, setSavedWords] = useState([]);
@@ -37,7 +35,6 @@ const FavoriteFeatue = (userId) => {
   const handleChange = (e) => {
     setMessage(e.target.value);
   };
-
 
   async function getDetails() {
     const id = { user };
@@ -79,7 +76,6 @@ const FavoriteFeatue = (userId) => {
     return () => clearInterval(intervalId); // Clean up the interval when the component unmounts
   }, []);
 
-
   const handleDelete = (textToTranslate) => {
     // Show a confirmation dialog
     const confirmation = window.confirm(
@@ -107,12 +103,22 @@ const FavoriteFeatue = (userId) => {
     }
   };
 
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filteredItems = savedWords.filter((item) =>
+      item.textToTranslate.toLowerCase().includes(query)
+    );
+
+    setFilteredWords(filteredItems);
+  };
+
   return (
     <div>
-      <h2 className="px-5 text-lg font-medium text-white dark:text-white">
-        Favourite
+      <h2 className="px-5 text-lg font-medium text-black dark:text-white">
+        Favorite
       </h2>
-
       <input
         type="text"
         placeholder="Search"
@@ -191,11 +197,10 @@ const FavoriteFeatue = (userId) => {
                   </div>
                 </>
               )}
-
             </div>
             <hr className="my-2 border-blue-500 mt-7 opacity-30" />{" "}
             {/* Separator line */}
-          </li>
+          </div>
         ))}
       </ul>
     </div>
