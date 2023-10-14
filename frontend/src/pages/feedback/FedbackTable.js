@@ -12,6 +12,7 @@ const FeedbackTable = () => {
   const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
   const [user, setUser] = useState({ _id: null });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
 
   useEffect(() => {
     if (!user._id) {
@@ -81,6 +82,7 @@ const FeedbackTable = () => {
   const handleUpdate = (feedback) => {
     setSelectedFeedback(feedback);
     setUpdatedFeedback(feedback.feedbackText);
+    setCharacterCount(feedback.feedbackText.length); // Set character count
     setIsUpdateModalOpen(true);
   };
 
@@ -218,10 +220,20 @@ const FeedbackTable = () => {
             <textarea
               className="w-full border rounded p-2 mb-4"
               value={updatedFeedback}
-              onChange={(e) => setUpdatedFeedback(e.target.value)}
+              onChange={(e) => {
+                const newText = e.target.value;
+                const charCount = newText.length;
+                if (charCount <= 50) {
+                  setUpdatedFeedback(newText);
+                  setCharacterCount(charCount); // Update character count
+                }
+              }}
               rows="4"
               placeholder="Enter updated feedback"
             />
+            <p className="text-gray-500 text-right">
+              {characterCount} / 50 characters
+            </p>
             <div className="flex justify-end">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -236,15 +248,16 @@ const FeedbackTable = () => {
                       fill="none"
                       viewBox="0 0 24 24"
                     >
-                      <path
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                      ></path>
+                        stroke-width="4"
+                        fill="none"
+                      />
                     </svg>
-                    Processing...
+                    Updating...
                   </div>
                 ) : (
                   "Update Feedback"
