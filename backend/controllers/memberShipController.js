@@ -48,6 +48,17 @@ export function viewMembership(req, res) {
         res.status(500).json({ message: "something wrong" });
       });
   }
+
+  export function viewMembershipUsingId(req,res){
+    membershipTypeModel.findById(req.params.id)
+    .then((result)=>{
+        res.send(result)
+    })
+    .catch((err)=>{
+        console.error(err);
+        res.status(500).json({message:"Something went wrong"})
+    })
+  }
   
 
 

@@ -76,7 +76,16 @@ export default function Login() {
           console.log(refreshToken)
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
-          navigate("/");
+
+          console.log(newUser.user.firstName);
+          if(newUser.user.lastName === "superadmin"){
+            console.log("i am adim")
+            navigate("/adminController");
+          }else{
+            console.log("i am user")
+            navigate("/");
+          }
+          
         });
     } catch (error) {
       seterror("Invalid email or password");
