@@ -7,6 +7,7 @@ const membership = new mongoose.Schema({
         ref : "user",
     },
 
+
     membershipType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "membershipType",
@@ -19,10 +20,25 @@ const membership = new mongoose.Schema({
     endDate: {
         type: Date
     },
+
+    payment:{
+        type: String,
+        enum : ['pending','approved'],
+        default:'approved'
+    },
     status: {
         type: String,
         enum : ['active','inactive'],
         default: 'inactive'
+    },
+    email:{
+        type:String,
+        required:true
+
+    },
+    name:{
+        type:String,
+        required:true
     }
 });
 
