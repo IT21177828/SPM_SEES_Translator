@@ -512,7 +512,7 @@ const handleFeedbackSubmit = async () => {
 
             {feature === 2 && banner ? (
               <div
-                className={`h-screen pt-24 w-60 transition-transform ease-in-out duration-1000 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-96 ${
+                className={`h-screen pt-24 w-60 transition-transform ease-in-out duration-1000 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-[1200px] ${
                   banner ? "translate-x-0" : "-translate-x-full"
                 }`}
               >
