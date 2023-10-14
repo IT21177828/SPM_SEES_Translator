@@ -1,17 +1,17 @@
-import Feedback from '../models/FeedbackModel.js';
-
+import Feedback from "../models/FeedbackModel.js";
+import user from "../models/usermodel.js";
 
 // Create feedback for translation
 const createFeedbackForTranslation = async (req, res) => {
   try {
-    const { englishWord, sinhalaWord, feedbackText } = req.body;
+    const { englishWord, sinhalaWord, feedbackText, user_Id } = req.body;
+
     const feedback = new Feedback({
       word: englishWord,
       sword: sinhalaWord,
-      feedbackText,
-      userId: "req.user.id",
+      feedbackText: feedbackText,
+      userId: user_Id,
     });
-    console.log(feedback);
     // Save the feedback to the database
     const savedFeedback = await feedback.save().then((resp) => {
       res.status(201).json(resp);
@@ -36,11 +36,17 @@ const getAllFeedback = async (req, res) => {
 // Get feedback by ID
 const getFeedbackById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const feedback = await Feedback.findById(id);
+    const userId = req.query.userId;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const feedback = await Feedback.find({ userId: userId });
     if (!feedback) {
       return res.status(404).json({ message: "Feedback not found" });
     }
+
     res.status(200).json(feedback);
   } catch (error) {
     console.error(error);

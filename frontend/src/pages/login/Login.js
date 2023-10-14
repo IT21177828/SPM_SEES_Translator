@@ -60,7 +60,7 @@ export default function Login() {
           passwordHash,
         })
         .then((res) => {
-          // console.log(res.data.user.firstName);
+          console.log(res.data.user.firstName);
           const newUser = { user: res.data.user };
           console.log(newUser);
           setUser(newUser);
