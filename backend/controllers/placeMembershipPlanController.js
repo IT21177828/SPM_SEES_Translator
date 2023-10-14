@@ -21,7 +21,9 @@ const transporter = nodemailer.createTransport({
 
 //acivate new membership
 export async function activateMembership(req, res){
+
     const {email,name,payment,status} = req.body;
+
 
     let membershipTyp = new membershipTypeModel();
     let user = new userModel();
@@ -34,9 +36,13 @@ export async function activateMembership(req, res){
     // membershipTyp.endDate.setDate(membershipTyp.startDate.getDate() +membershipTyp.membershipType.duration);
 
 
+    
+
     try{
-        const userObject = await userModel.findOne({email : req.body.email});
+
+        // Check if membership type already exists
         const existingMembershipTypeModel = await membershipTypeModel.findOne({ name: req.body.name });
+
         console.log("fdsvsdfvsdfvsdvsf")
         console.log(email)
         const mailOptions = {
@@ -105,14 +111,9 @@ export async function activateMembership(req, res){
             console.log("already active")
             return res.status(400).json({
                 error: "Membership already active"
-
             });
 
-
         }
-
-       
-
     }catch(err){
         res.status(500).json({ error: "Something went wrong" });
     }
