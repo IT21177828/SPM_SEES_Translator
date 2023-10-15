@@ -40,6 +40,7 @@ export default function Translate() {
   const [isLogedIn, setIsLogedIn] = useState(false); // Updated state
   const [feature, setFeature] = useState(1); // Updated state
   const [banner, setBanner] = useState(false); // Updated state
+  const [isActiveMember, setIsActivemember] = useState(false);
 
   const getLanguages = async () => {
     try {
@@ -116,10 +117,27 @@ export default function Translate() {
     }
   };
 
+  const isMembershilActive = async () => {
+    try {
+      const data = {
+        email : user.email
+      }
+      await axios
+        .get("http://localhost:5050/membership/getMembershipDetails", {data})
+        .then((res) => {
+          console.log({"datas" : res.data});
+        })
+        .catch((err) => {
+          console.log({"error" : err});
+        });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getLanguages();
     // Fetch user information when the component mounts
     fetchUserData();
+    isMembershilActive();
   }, []);
 
   const translate = async () => {
@@ -191,20 +209,17 @@ export default function Translate() {
         sinhalaWord: feedback.sinhalaWord,
         feedbackText: feedback.feedbackText,
         user_Id: user._id,
-      
       };
-console.log(user._id)
-const token = localStorage.getItem("accessToken");
+      console.log(user._id);
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post(
         "http://localhost:5050/feedback/translation",
-        feedbackData,{
+        feedbackData,
+        {
           headers: {
             authorization: `Bearer ${token}`,
           },
-
         }
-         
-        
       ); // Update the URL as needed
 
       // Check if the submission was successful
@@ -393,7 +408,7 @@ const token = localStorage.getItem("accessToken");
 
               {user._id ? (
                 <div className="relative w-full h-fit">
-                <a
+                  <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
