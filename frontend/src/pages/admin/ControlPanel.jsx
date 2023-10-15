@@ -199,9 +199,10 @@ export default function ControlPanel() {
           </svg>
 
           <div className="hidden lg:block">
-            <div className="my-2 mb-6">
-              <h1 className="text-2xl  font-bold text-blue">Admin Dashboard</h1>
-            </div>
+          <div className="my-2 mb-6">
+  <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+</div>
+
 
             <ul>
               <li className="mb-6">
@@ -377,7 +378,6 @@ export default function ControlPanel() {
                   </button>
                 </div>
               </div>
-
             </div>
             <div className="flex flex-col mt-8">
               <div className="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -495,7 +495,7 @@ export default function ControlPanel() {
 
                   {isUpdateModalOpen && selectedMembership && (
                     <div className="fixed inset-0 flex items-center justify-center z-50">
-                      <div className="modal bg-white rounded shadow-md p-6 w-96">
+                      <div className="modal bg-gray-100 rounded shadow-md p-6 w-96">
                         <span
                           className="close text-gray-600 text-2xl absolute top-0 right-0 mr-4 mt-2 cursor-pointer"
                           onClick={closeModal}
@@ -511,9 +511,9 @@ export default function ControlPanel() {
                         <div className="mb-6">
                           <label
                             htmlFor="price"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                           >
-                            Price
+                            Name
                           </label>
                           <input
                             type="text"
@@ -533,7 +533,7 @@ export default function ControlPanel() {
                         <div className="mb-6">
                           <label
                             htmlFor="price"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                           >
                             Price
                           </label>
@@ -554,23 +554,19 @@ export default function ControlPanel() {
                         <div className="mb-6">
                           <label
                             htmlFor="price"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                           >
-                            Price
+                            Description
                           </label>
-                          <input
-                            type="text"
-                            id="price"
-                            name="price"
+                          <textarea
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             value={updatedMembershipsDescription}
                             onChange={(e) => {
                               const newText = e.target.value;
-
-                              setUpdatedMembershipsDescription(newText); // Correct the variable name here
+                              setUpdatedMembershipsDescription(newText);
                             }}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            // placeholder="Price"
-                            required
+                            rows={4} // Specify the number of rows you want
+                            placeholder="Enter updated feedback"
                           />
                         </div>
 
@@ -654,7 +650,7 @@ export default function ControlPanel() {
                   {/* //delete model  */}
                   {isDeleteModalOpen && selectedMembership && (
                     <div className="fixed inset-0 flex items-center justify-center z-50">
-                      <div className="modal bg-white rounded shadow-md p-6 w-96">
+                      <div className="modal bg-gray-100 rounded shadow-md p-6 w-96">
                         <span
                           className="close text-gray-600 text-2xl absolute top-0 right-0 mr-4 mt-2 cursor-pointer"
                           onClick={closeModal}
@@ -672,6 +668,7 @@ export default function ControlPanel() {
                             This action cannot be undone.
                           </p>
                         </div>
+                        <br></br>
                         <div className="flex justify-end">
                           <button
                             className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
