@@ -40,6 +40,7 @@ export default function Translate() {
   const [isLogedIn, setIsLogedIn] = useState(false); // Updated state
   const [feature, setFeature] = useState(1); // Updated state
   const [banner, setBanner] = useState(false); // Updated state
+  const [isActiveMember, setIsActivemember] = useState(false);
 
   const getLanguages = async () => {
     try {
@@ -116,10 +117,27 @@ export default function Translate() {
     }
   };
 
+  const isMembershilActive = async () => {
+    try {
+      const data = {
+        email : user.email
+      }
+      await axios
+        .get("http://localhost:5050/membership/getMembershipDetails", {data})
+        .then((res) => {
+          console.log({"datas" : res.data});
+        })
+        .catch((err) => {
+          console.log({"error" : err});
+        });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getLanguages();
     // Fetch user information when the component mounts
     fetchUserData();
+    isMembershilActive();
   }, []);
 
   const translate = async () => {
@@ -190,40 +208,63 @@ export default function Translate() {
   };
 
   // Handle feedback submission
-  const handleFeedbackSubmit = async () => {
-    try {
-      // Send the feedback data to the backend
-      const feedbackData = {
-        englishWord: feedback.englishWord,
-        sinhalaWord: feedback.sinhalaWord,
-        feedbackText: feedback.feedbackText,
-        user_Id: user._id,
-      };
-      console.log(user._id);
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://localhost:5050/feedback/translation",
-        feedbackData,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      ); // Update the URL as needed
 
-      // Check if the submission was successful
-      if (response.status === 201) {
-        console.log("Feedback submitted successfully.");
-        // Clear the feedback form
-        setFeedback({ englishWord: "", sinhalaWord: "", feedbackText: "" });
-        setShowModal(false); // Close the feedback modal
-      } else {
-        console.log("Feedback submission failed.");
-      }
-    } catch (error) {
-      console.error(error);
+const handleFeedbackSubmit = async () => {
+  try {
+    if (feedback.feedbackText.length > 50) {
+      // Display an alert with a Tailwind CSS style
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3 text-center';
+      alertDiv.setAttribute('role', 'alert');
+      
+      const alertContent = `
+        <p class="font-bold">ALERT</p>
+        <p class="text-sm">Feedback text must not exceed 50 characters.</p>
+      `;
+      alertDiv.innerHTML = alertContent;
+      document.body.appendChild(alertDiv);
+
+      // Automatically remove the alert after a few seconds
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000); // 5000 milliseconds (5 seconds)
+      return; // Stop the submission
     }
-  };
+
+    // Send the feedback data to the backend
+    const feedbackData = {
+      englishWord: feedback.englishWord,
+      sinhalaWord: feedback.sinhalaWord,
+      feedbackText: feedback.feedbackText,
+      user_Id: user._id,
+    };
+    console.log(user._id);
+    const token = localStorage.getItem("accessToken");
+    const response = await axios.post(
+      "http://localhost:5050/feedback/translation",
+      feedbackData,
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+      );    
+    
+    // Check if the submission was successful
+    if (response.status === 201) {
+      console.log("Feedback submitted successfully.");
+      // Clear the feedback form
+      setFeedback({ englishWord: "", sinhalaWord: "", feedbackText: "" });
+      setShowModal(false); // Close the feedback modal
+    } else {
+      console.log("Feedback submission failed.");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  
 
   function handleFeature(e) {
     setBanner(true);
@@ -490,7 +531,7 @@ export default function Translate() {
 
             {feature === 2 && banner ? (
               <div
-                className={`h-screen pt-24 w-60 transition-transform ease-in-out duration-1000 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-96 ${
+                className={`h-screen pt-24 w-60 transition-transform ease-in-out duration-1000 overflow-y-auto border-l border-r bg-white py-8 dark:border-gray-700 dark:bg-gray-900 sm:w-[1200px] ${
                   banner ? "translate-x-0" : "-translate-x-full"
                 }`}
               >
@@ -579,12 +620,12 @@ export default function Translate() {
                 <Button />
               </div>
               {/* Add a feedback button */}
-              <button
-                className="feedback-button"
-                onClick={handleFeedbackModalOpen}
-              >
-                Provide Feedback
-              </button>
+              {isLogedIn && (
+  <button className="feedback-button" onClick={handleFeedbackModalOpen}>
+    Provide Feedback
+  </button>
+)}
+
             </>
           )}
           {showDropdownModal && (
