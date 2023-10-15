@@ -23,8 +23,8 @@ export default function FeedbackModal({ feedback, setFeedback, handleFeedbackSub
     <div className="feedback-modal">
       <h2>Provide Feedback</h2>
       <div>
-        <p>English Word: {englishWord}</p>
-        <p>Sinhala Word: {sinhalaWord}</p>
+        <p>Input Word: {englishWord}</p>
+        <p>Output Word: {sinhalaWord}</p>
       </div>
       <textarea
         rows="4"
