@@ -2,11 +2,32 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import 'jspdf-autotable';
+import { Link, useParams } from "react-router-dom";
+import "jspdf-autotable";
 
 export default function ControlPanel() {
   const [membership, SetMembership] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [feedbackData, setMemberShipData] = useState([]);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedMembership, setSelectedMembership] = useState(null);
+
+  const [updatedMembershipsName, setUpdatedMembershipname] = useState([]);
+  const [updatedMembershipsPrice, setUpdatedMembershipprice] = useState([]);
+  const [updatedMembershipsDescription, setUpdatedMembershipsDescription] =
+    useState([]);
+
+  const [updatedMembership, setUpdatedMemberShip] = useState([]);
+  const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    price: 0,
+    description: "",
+  });
+
+  const [characterCount, setCharacterCount] = useState(0);
 
   useEffect(() => {
     axios
@@ -15,21 +36,125 @@ export default function ControlPanel() {
       .catch((err) => console.log(err));
   }, []);
 
+  const closeModal = () => {
+    setSelectedMembership(null);
+    setIsUpdateModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const { id } = useParams();
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:5050/membershipType/view/${id}`
+  //       );
+  //       setFormData(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   // Send a POST request to your API to add the new membership plan
+  //   axios
+  //     .post("http://localhost:5050/membershipType/", formData)
+  //     .then((result) => {
+  //       // Update the state or perform any other necessary actions
+  //       setMemberships([...memberships, result.data]);
+  //       // Clear the form data
+  //       setFormData({
+  //         name: "",
+  //         price: 0,
+  //         description: "",
+  //       });
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  //   fetchData(); // Call the fetchData function to trigger the data fetching.
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [id]);
+
+  const handleUpdate = (plan) => {
+    setSelectedMembership(plan);
+    setUpdatedMembershipname(plan.name);
+    setUpdatedMembershipprice(plan.price);
+    setUpdatedMembershipsDescription(plan.description);
+
+    // setCharacterCount(feedback.feedbackText.length); // Set character count
+    setIsUpdateModalOpen(true);
+  };
+
   const handleDelete = (id) => {
+    setIsDeleteModalOpen(true);
+    setSelectedMembership(id);
+  };
+
+  const UpdateMemberShip = () => {
+    setIsProcessingUpdate(true);
+
     axios
-      .delete("http://localhost:5050/membershipType/delete/" + id)
-      .then((res) => {
-        console.log(res);
-        // Remove the deleted item from the local state
-        // SetHistory(prevHistory => prevHistory.filter(item => item._id !== id));
+      .put(
+        `http://localhost:5050/membershipType/update/${selectedMembership._id}`,
+        {
+          name: updatedMembershipsName,
+          price: updatedMembershipsPrice,
+          description: updatedMembershipsDescription,
+        }
+      )
+      .then(() => {
+        setMemberShipData((prevData) =>
+          prevData.map((plan) =>
+            plan._id === selectedMembership._id
+              ? {
+                  ...plan,
+                  name: updatedMembershipsName,
+                  price: updatedMembershipsPrice,
+                  description: updatedMembershipsDescription,
+                }
+              : plan
+          )
+        );
+        setIsProcessingUpdate(false);
+        closeModal();
+        window.location.reload();
+      })
+      .catch((error) => {
+        setIsProcessingUpdate(false);
+        console.error("Error updating feedback:", error);
+      });
+  };
+
+  const confirmDelete = () => {
+    console.log(selectedMembership);
+    axios
+      .delete(
+        `http://localhost:5050/membershipType/delete/${selectedMembership}`,
+        {}
+      )
+      .then(() => {
+        // Handle the successful delete here
+        setIsDeleteModalOpen(false);
         window.location.reload();
       })
       .catch((err) => console.log(err));
   };
 
-  const handleUpdate = (id) => {
-    window.location.href = "update-member/"+id;
-  }; 
+  // const handleUpdate = (id) => {
+  //   window.location.href = "update-member/"+id;
+  // };
 
   const downloadPDF = () => {
     const doc = new jsPDF();
@@ -41,7 +166,6 @@ export default function ControlPanel() {
         membership.name,
         membership.price,
         membership.description,
-
       ];
       tableRows.push(equipmentData);
     });
@@ -50,12 +174,10 @@ export default function ControlPanel() {
     doc.save("MembershipList.pdf");
   };
 
-
   // fucntion for search using membership name
   const filteredMembership = membership.filter((plan) => {
     return plan.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
-
 
   return (
     <div>
@@ -219,35 +341,13 @@ export default function ControlPanel() {
                   </svg>
                 </div>
                 <div className="mx-4">
-                  <button >
-                  <h4 className="text-2xl font-semibold text-gray-700">Add New Membership</h4>
-                  {/* <div className="text-gray-500">All Users</div> */}
-                  </button>
-                </div>
-              </div>
-              <div className="flex items-center px-4 py-6 bg-white rounded-md shadow-md">
-                <div className="p-3 bg-indigo-600 rounded">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-                    />
-                  </svg>
-                </div>
-                <div className="mx-4">
-                  <button onClick={()=> downloadPDF()} className="hov" >
-                  <h4 className="text-2xl font-semibold text-gray-700">Download Membership Report</h4>
-                  {/* <div className="text-gray-500">All Blogs</div> */}
+                  <button>
+                    <Link to="/create-membership">
+                      <h4 className="text-2xl font-semibold text-gray-700">
+                        Add New Membership
+                      </h4>
+                      {/* <div className="text-gray-500">All Users</div> */}
+                    </Link>
                   </button>
                 </div>
               </div>
@@ -264,15 +364,20 @@ export default function ControlPanel() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
-                      d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M8 7h4m0 0l-4 4m4-4l4 4m7 5H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"
                     />
                   </svg>
                 </div>
                 <div className="mx-4">
-                  <h4 className="text-2xl font-semibold text-gray-700">1000</h4>
-                  {/* <div className="text-gray-500">All Transaction</div> */}
+                  <button onClick={() => downloadPDF()} className="hov">
+                    <h4 className="text-2xl font-semibold text-gray-700">
+                      Download Report
+                    </h4>
+                    {/* <div className="text-gray-500">All Blogs</div> */}
+                  </button>
                 </div>
               </div>
+
             </div>
             <div className="flex flex-col mt-8">
               <div className="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -288,6 +393,9 @@ export default function ControlPanel() {
                         </th>
                         <th className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                           Description
+                        </th>
+                        <th className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                          Status
                         </th>
                         <th className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                           Edit
@@ -323,7 +431,10 @@ export default function ControlPanel() {
                               ${plan.price}
                             </span>
                           </td>
-                          <td className="px-6 py-4 w-10  overflow-x-hidden whitespace-nowrap">
+                          <td
+                            className="px-6 py-4 whitespace-nowrap"
+                            style={{ maxWidth: "200px", whiteSpace: "normal" }}
+                          >
                             {plan.description}
                           </td>
 
@@ -333,12 +444,14 @@ export default function ControlPanel() {
                             </span>
                           </td>
 
-                          <td id="" className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                          <td
+                            id=""
+                            className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
+                          >
                             <svg
                               onClick={() => {
-                                handleUpdate(plan._id);
+                                handleUpdate(plan);
                               }}
-
                               xmlns="http://www.w3.org/2000/svg"
                               className="w-6 h-6 text-blue-400"
                               fill="none"
@@ -377,6 +490,205 @@ export default function ControlPanel() {
                       ))}
                     </tbody>
                   </table>
+
+                  {/* //update model  */}
+
+                  {isUpdateModalOpen && selectedMembership && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                      <div className="modal bg-white rounded shadow-md p-6 w-96">
+                        <span
+                          className="close text-gray-600 text-2xl absolute top-0 right-0 mr-4 mt-2 cursor-pointer"
+                          onClick={closeModal}
+                        >
+                          &times;
+                        </span>
+                        <center>
+                          <h2 className="text-xl font-semibold mb-4">
+                            Update Membership
+                          </h2>
+                        </center>
+
+                        <div className="mb-6">
+                          <label
+                            htmlFor="price"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Price
+                          </label>
+                          <input
+                            type="text"
+                            id="price"
+                            name="price"
+                            value={updatedMembershipsName}
+                            onChange={(e) => {
+                              const newText = e.target.value;
+                              setUpdatedMembershipname(newText); // Correct the variable name here
+                              // Update character count if needed
+                            }}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Price"
+                            required
+                          />
+                        </div>
+                        <div className="mb-6">
+                          <label
+                            htmlFor="price"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Price
+                          </label>
+                          <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={updatedMembershipsPrice}
+                            onChange={(e) => {
+                              const newText = e.target.value;
+                              setUpdatedMembershipprice(newText); // Correct the variable name here
+                            }}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Price"
+                            required
+                          />
+                        </div>
+                        <div className="mb-6">
+                          <label
+                            htmlFor="price"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Price
+                          </label>
+                          <input
+                            type="text"
+                            id="price"
+                            name="price"
+                            value={updatedMembershipsDescription}
+                            onChange={(e) => {
+                              const newText = e.target.value;
+
+                              setUpdatedMembershipsDescription(newText); // Correct the variable name here
+                            }}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            // placeholder="Price"
+                            required
+                          />
+                        </div>
+
+                        {/* <textarea
+                          className="w-full border rounded p-2 mb-4"
+                          value={updatedMembershipsName}
+                          onChange={(e) => {
+                            const newText = e.target.value;
+                            setUpdatedMembershipname(newText); // Correct the variable name here
+                            // Update character count if needed
+                          }}
+                          rows="4"
+                          placeholder="Enter updated feedback"
+                        />
+
+                        <textarea
+                          className="w-full border rounded p-2 mb-4"
+                          value={updatedMembershipsPrice}
+                          onChange={(e) => {
+                            const newText = e.target.value;
+                            setUpdatedMembershipprice(newText); // Correct the variable name here
+                          }}
+                          rows="4"
+                          placeholder="Enter updated feedback"
+                        />
+                        <textarea
+                          className="w-full border rounded p-2 mb-4"
+                          value={updatedMembershipsDescription}
+                          onChange={(e) => {
+                            const newText = e.target.value;
+
+                            setUpdatedMembershipsDescription(newText); // Correct the variable name here
+                          }}
+                          rows="4"
+                          placeholder="Enter updated feedback"
+                        /> */}
+
+                        {/* <p className="text-gray-500 text-right">
+                          {characterCount} / 50 characters
+                        </p> */}
+                        <div className="flex justify-end">
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                            onClick={UpdateMemberShip}
+                            disabled={isProcessingUpdate}
+                          >
+                            {isProcessingUpdate ? (
+                              <div className="flex items-center">
+                                <svg
+                                  className="animate-spin h-5 w-5 mr-3 text-white"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                    fill="none"
+                                  />
+                                </svg>
+                                Updating...
+                              </div>
+                            ) : (
+                              "Update Membership"
+                            )}
+                          </button>
+                          <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                            onClick={closeModal}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* //delete model  */}
+                  {isDeleteModalOpen && selectedMembership && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                      <div className="modal bg-white rounded shadow-md p-6 w-96">
+                        <span
+                          className="close text-gray-600 text-2xl absolute top-0 right-0 mr-4 mt-2 cursor-pointer"
+                          onClick={closeModal}
+                        >
+                          &times;
+                        </span>
+                        <center>
+                          <h2 className="text-xl font-semibold mb-4">
+                            Delete Membership
+                          </h2>
+                        </center>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Are you sure you want to delete this Membership?
+                            This action cannot be undone.
+                          </p>
+                        </div>
+                        <div className="flex justify-end">
+                          <button
+                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                            onClick={confirmDelete}
+                          >
+                            Delete
+                          </button>
+                          <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                            onClick={closeModal}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
