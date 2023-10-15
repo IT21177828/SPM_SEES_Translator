@@ -12,6 +12,9 @@ import MemberShipPlan from "./pages/membershipPlans/MemberShipPlan"
 
 import MembershipControlPanel from "./pages/membershipPlans/MembershipControlPanel";
 import CreateNewMemberShip from "./pages/membershipPlans/CreateNewMemberShip"
+import CheckoutPage from "./pages/checkout/Checkout";
+import ControlPanel from "./pages/admin/ControlPanel";
+import UpdateMemberShip from "./pages/admin/UpdateMembership"
 
 const App = () => {
   return (
@@ -24,10 +27,14 @@ const App = () => {
         {/* <Route path="/saved" element={<TranslationSaved/>}/>
         <Route path="/history" element={<TranslationHistory/>}/> */}
         <Route path="/BadWord" element={<BadWordHistory/>}/> 
-        <Route path="/checkout" element={<Checkout/>}/>      
+        {/* <Route path="/checkout" element={<Checkout/>}/>       */}
         <Route path="/memberships" element={<MemberShipPlan/>}/>   
         <Route path = "/membership-control-panel" element={<MembershipControlPanel/>}/> 
         <Route path = "/create-membership" element={<CreateNewMemberShip/>}/> 
+
+        <Route path="/checkout/:id" element={<CheckoutPage/>} />
+        <Route path= "/adminController" element={<ControlPanel/>} />
+        <Route path= "/update-member/:id" element={<UpdateMemberShip/>} />
 
       </Routes>
     </Router>

@@ -1,10 +1,10 @@
 import SavedWordModel from "../models/SavedWordModel.js";
 
-const getSavedWord = (req, res) => {
-  SavedWordModel.find()
-    .then((word) => res.json(word))
-    .catch((err) => res.json(err));
-};
+// const getSavedWord = (req, res) => {
+//   SavedWordModel.find()
+//     .then((word) => res.json(word))
+//     .catch((err) => res.json(err));
+// };
 
 const deleteSavedWord = (req, res) => {
   SavedWordModel.findByIdAndDelete(req.params.id)
@@ -20,12 +20,13 @@ const deleteSavedWord = (req, res) => {
 
 const createSavedWord = async (req, res) => {
   try {
-    // Extract data from the request body
+    const name = req.body.name;
     const { inputLanguage, outputLanguage, textToTranslate, translatedText } =
       req.body;
 
     // Create a new translation document and save it to the database
     const translation = new SavedWordModel({
+      userID: name,
       inputLanguage,
       outputLanguage,
       textToTranslate,
@@ -113,6 +114,32 @@ const updateMessage = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while updating the message." });
+  }
+};
+const getSavedWord = async (req, res) => {
+  try {
+    // Extract the user ID from the query parameters
+    const id = req.query.user;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "User ID not provided.",
+      });
+    }
+
+    // Find history records for the specified user
+    const savedRecords = await SavedWordModel.find({ userID: id }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      response: savedRecords,
+    });
+  } catch (error) {
+    console.error("Error in getHistory:", error);
+    res.status(500).json({
+      error: "An error occurred while fetching the user's history.",
+    });
   }
 };
 

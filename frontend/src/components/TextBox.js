@@ -13,6 +13,7 @@ const TextBox = ({
   setTranslatedText,
   outputLanguage,
   inputLanguage,
+  userId,
 }) => {
   const handleClick = () => {
     setTextToTranslate(""); // Clear the input text
@@ -31,6 +32,7 @@ const TextBox = ({
       } else {
         // If the word is not saved, save it to the database
         await axios.post("http://localhost:5050/savedWord/saved", dataToSave);
+        console.log(dataToSave);
         setIsWordSaved(true); // Toggle the state to filled
       }
     } catch (error) {
@@ -73,9 +75,10 @@ const TextBox = ({
       )}
       {style === "output" && translatedText && (
         <div
-          className="saved relative bottom-32 left-60 cursor-pointer"
+          className="saved relative bottom-8 left-60 cursor-pointer"
           onClick={() => {
             const dataToSave = {
+              name: userId,
               textToTranslate,
               outputLanguage,
               inputLanguage,
@@ -110,6 +113,7 @@ TextBox.propTypes = {
   setTranslatedText: PropTypes.func.isRequired,
   outputLanguage: PropTypes.string.isRequired,
   inputLanguage: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
 };
 
 export default TextBox;

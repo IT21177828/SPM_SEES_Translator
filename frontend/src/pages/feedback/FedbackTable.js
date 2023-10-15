@@ -1,39 +1,41 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import axios from "axios";
 
 const FeedbackTable = () => {
   const [feedbackData, setFeedbackData] = useState([]);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [updatedFeedback, setUpdatedFeedback] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState({}); // Updated state
-  const [isLogedIn, setIsLogedIn] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isProcessingUpdate, setIsProcessingUpdate] = useState(false);
+  const [user, setUser] = useState({ _id: null });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+
+  useEffect(() => {
+    if (!user._id) {
+      fetchUserData();
+    } else {
+      getData();
+    }
+  }, [user]);
 
   const fetchUserData = async () => {
     try {
-      console.log("first");
       const token = localStorage.getItem("accessToken");
-      const response = await axios
-        .post("http://localhost:5050/user/details", null, {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.user) {
-            setUser(res.data.user);
-            setIsLogedIn(true);
-            getData();
-            console.log(res.data.user);
-          } else {
-            setIsLogedIn(false);
-          }
-        })
-        .catch((err) => {
-          console.log(err.response?.data);
-        });
+      const res = await axios.post("http://localhost:5050/user/details", null, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.user) {
+        setUser(res.data.user);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -41,10 +43,8 @@ const FeedbackTable = () => {
 
   const getData = async () => {
     const token = localStorage.getItem("accessToken");
-    // if (user._id) {
     const userId = user._id;
     const url = `http://localhost:5050/feedback/user?userId=${userId}`;
-    console.log(url);
     axios
       .get(url, {
         headers: {
@@ -55,25 +55,26 @@ const FeedbackTable = () => {
         setFeedbackData(data.data);
       })
       .catch((error) => console.error("Error fetching feedback data:", error));
-    // }
   };
 
-  useEffect(() => {
-    fetchUserData();
-  }, [user._id]);
-
   const handleDelete = (id) => {
+    setIsDeleteModalOpen(true);
+    setSelectedFeedback(id);
+  };
+
+  const confirmDelete = () => {
     const token = localStorage.getItem("accessToken");
     axios
-      .delete("http://localhost:5050/feedback/delete/" + id, {
+      .delete(`http://localhost:5050/feedback/delete/${selectedFeedback}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
         setFeedbackData((prevData) =>
-          prevData.filter((feedback) => feedback._id !== id)
+          prevData.filter((feedback) => feedback._id !== selectedFeedback)
         );
+        setIsDeleteModalOpen(false);
       })
       .catch((err) => console.log(err));
   };
@@ -81,15 +82,18 @@ const FeedbackTable = () => {
   const handleUpdate = (feedback) => {
     setSelectedFeedback(feedback);
     setUpdatedFeedback(feedback.feedbackText);
-    setIsModalOpen(true);
+    setCharacterCount(feedback.feedbackText.length); // Set character count
+    setIsUpdateModalOpen(true);
   };
 
   const closeModal = () => {
     setSelectedFeedback(null);
-    setIsModalOpen(false);
+    setIsUpdateModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   const updateFeedback = () => {
+    setIsProcessingUpdate(true);
     const token = localStorage.getItem("accessToken");
     axios
       .put(
@@ -111,9 +115,13 @@ const FeedbackTable = () => {
               : feedback
           )
         );
+        setIsProcessingUpdate(false);
         closeModal();
       })
-      .catch((error) => console.error("Error updating feedback:", error));
+      .catch((error) => {
+        setIsProcessingUpdate(false);
+        console.error("Error updating feedback:", error);
+      });
   };
 
   const generateFeedbackReport = () => {
@@ -173,8 +181,22 @@ const FeedbackTable = () => {
               <div className="flex justify-center">
                 <button
                   onClick={generateFeedbackReport}
-                  className="bg-black hover:bg-black-700 text-white font-bold py-4 px-4 rounded"
+                  className="bg-black hover:bg-black-700 text-white font-bold py-4 px-4 rounded flex items-center space-x-2"
                 >
+                  <svg
+                    className="animate-bounce w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                    ></path>
+                  </svg>
                   Generate Feedback Report
                 </button>
               </div>
@@ -183,8 +205,7 @@ const FeedbackTable = () => {
         </tbody>
       </table>
 
-      {/* Modal for updating feedback */}
-      {selectedFeedback && isModalOpen && (
+      {isUpdateModalOpen && selectedFeedback && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="modal bg-white rounded shadow-md p-6 w-96">
             <span
@@ -199,16 +220,84 @@ const FeedbackTable = () => {
             <textarea
               className="w-full border rounded p-2 mb-4"
               value={updatedFeedback}
-              onChange={(e) => setUpdatedFeedback(e.target.value)}
+              onChange={(e) => {
+                const newText = e.target.value;
+                const charCount = newText.length;
+                if (charCount <= 50) {
+                  setUpdatedFeedback(newText);
+                  setCharacterCount(charCount); // Update character count
+                }
+              }}
               rows="4"
               placeholder="Enter updated feedback"
             />
+            <p className="text-gray-500 text-right">
+              {characterCount} / 50 characters
+            </p>
             <div className="flex justify-end">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                 onClick={updateFeedback}
+                disabled={isProcessingUpdate}
               >
-                Update Feedback
+                {isProcessingUpdate ? (
+                  <div className="flex items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        fill="none"
+                      />
+                    </svg>
+                    Updating...
+                  </div>
+                ) : (
+                  "Update Feedback"
+                )}
+              </button>
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && selectedFeedback && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="modal bg-white rounded shadow-md p-6 w-96">
+            <span
+              className="close text-gray-600 text-2xl absolute top-0 right-0 mr-4 mt-2 cursor-pointer"
+              onClick={closeModal}
+            >
+              &times;
+            </span>
+            <center>
+              <h2 className="text-xl font-semibold mb-4">Delete Feedback</h2>
+            </center>
+            <div className="mt-2">
+              <p className="text-sm text-gray-500">
+                Are you sure you want to delete this feedback? This action
+                cannot be undone.
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                onClick={confirmDelete}
+              >
+                Delete
               </button>
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"

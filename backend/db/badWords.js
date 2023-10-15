@@ -1,5 +1,5 @@
 const badWordsList = [
-    "Apple", "Peach", "Banana", "Milk", "Lemon", "Cake", "Squirrel", "Coffee", 
+    "Peach", "Banana", "Milk", "Lemon", "Cake", "Squirrel", "Coffee", 
     "Sunflower", "Butterfly", "Carrot", "Orange", "Guitar", "Elephant", "Keyboard",
     "Flower", "Fish", "Lion", "Moon", "Star", "Dog", "Cat", "Chair", "Book", "Table",
     "Fisherman", "Mountain", "Bird", "Shoe", "Umbrella","Hat", "Pen", "Clock", "Mirror",
