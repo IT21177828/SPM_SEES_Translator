@@ -235,6 +235,7 @@ export default function Checkout() {
       }
   
       pdf.save('receipt.pdf');
+
     });
   };
   
