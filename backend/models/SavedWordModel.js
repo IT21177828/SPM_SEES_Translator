@@ -7,6 +7,7 @@ const savedWord = new mongoose.Schema({
   outputLanguage: String,
   textToTranslate: String,
   translatedText: String,
+  message: String,
   createdAt: { type: Date, default: Date.now },
     
 }
