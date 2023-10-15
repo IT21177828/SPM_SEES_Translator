@@ -40,6 +40,7 @@ export default function Translate() {
   const [isLogedIn, setIsLogedIn] = useState(false); // Updated state
   const [feature, setFeature] = useState(1); // Updated state
   const [banner, setBanner] = useState(false); // Updated state
+  const [isActiveMember, setIsActivemember] = useState(false);
 
   const getLanguages = async () => {
     try {
@@ -116,10 +117,27 @@ export default function Translate() {
     }
   };
 
+  const isMembershilActive = async () => {
+    try {
+      const data = {
+        email : user.email
+      }
+      await axios
+        .get("http://localhost:5050/membership/getMembershipDetails", {data})
+        .then((res) => {
+          console.log({"datas" : res.data});
+        })
+        .catch((err) => {
+          console.log({"error" : err});
+        });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getLanguages();
     // Fetch user information when the component mounts
     fetchUserData();
+    isMembershilActive();
   }, []);
 
   const translate = async () => {
@@ -190,6 +208,7 @@ export default function Translate() {
   };
 
   // Handle feedback submission
+
 const handleFeedbackSubmit = async () => {
   try {
     if (feedback.feedbackText.length > 50) {
@@ -229,8 +248,8 @@ const handleFeedbackSubmit = async () => {
           authorization: `Bearer ${token}`,
         },
       }
-    );
-
+      );    
+    
     // Check if the submission was successful
     if (response.status === 201) {
       console.log("Feedback submitted successfully.");
