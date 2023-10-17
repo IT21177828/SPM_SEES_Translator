@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-export default function CreateNewMemberShip() {
+export default function UpdateMemberShip() {
   const [membership, setMembership] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -17,11 +18,33 @@ export default function CreateNewMemberShip() {
       [name]: value,
     });
   };
+  const { id } = useParams();
 
-  const navigate = useNavigate();
+  console.log(id)
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5050/membershipType/view/${id}`);
+        setFormData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData(); // Call the fetchData function to trigger the data fetching.
+  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+  
+
+  console.log(formData);
+
+
+
 
   const handleSubmit = (e) => {
-    
     e.preventDefault();
 
     // Send a POST request to your API to add the new membership plan
@@ -36,19 +59,14 @@ export default function CreateNewMemberShip() {
           price: 0,
           description: "",
         });
-
-        navigate('/adminController');
       })
       .catch((err) => console.log(err));
-
-
-
   };
 
   return (
     <div style={{width:"30%",margin:"auto auto",textAlign:"center"}}>
          <div class="mt-10 text-center">
-                        <h1 class="text-4xl font-bold text-white">Create New Pricing plans</h1>
+                        <h1 class="text-4xl font-bold text-white">Pricing plans</h1>
                         {/* <p class="text-lg mt-3 font-semibold">Every plan includes 30 day free trial</p> */}
                     </div>
 
@@ -110,14 +128,14 @@ export default function CreateNewMemberShip() {
             />
           </div>
           <label htmlFor="remember" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Remember me
+            Confirm the details
           </label>
         </div>
         <button
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Create Membership
+          Submit
         </button>
       </form>
     </div>

@@ -16,20 +16,26 @@ const FavoriteFeatue = (userId) => {
   };
 
   const handleSaveClick = () => {
-    setIsEditing(false);
-    axios
-      .put(`http://localhost:5050/savedWord/updateMessage/${editingItemId}`, {
-        message,
-      })
-      .then((result) => {
-        console.log(result);
-        console.log(message);
-        getDetails();
-      })
-      .catch((err) => {
-        console.error("Error updating message:", err);
-        // You can display an error message to the user here if needed
-      });
+    const confirmation = window.confirm(
+      "Are you sure you want to save the changes?"
+    );
+
+    if (confirmation) {
+      setIsEditing(false);
+      axios
+        .put("http://localhost:5050/savedWord/updateMessage/${editingItemId}", {
+          message,
+        })
+        .then((result) => {
+          console.log(result);
+          console.log(message);
+          getDetails();
+        })
+        .catch((err) => {
+          console.error("Error updating message:", err);
+          // You can display an error message to the user here if needed
+        });
+    }
   };
 
   const handleChange = (e) => {

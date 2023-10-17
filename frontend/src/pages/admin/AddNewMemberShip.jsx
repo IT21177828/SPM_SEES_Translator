@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function CreateNewMemberShip() {
   const [membership, setMembership] = useState([]);
@@ -18,10 +17,7 @@ export default function CreateNewMemberShip() {
     });
   };
 
-  const navigate = useNavigate();
-
   const handleSubmit = (e) => {
-    
     e.preventDefault();
 
     // Send a POST request to your API to add the new membership plan
@@ -36,19 +32,14 @@ export default function CreateNewMemberShip() {
           price: 0,
           description: "",
         });
-
-        navigate('/adminController');
       })
       .catch((err) => console.log(err));
-
-
-
   };
 
   return (
     <div style={{width:"30%",margin:"auto auto",textAlign:"center"}}>
          <div class="mt-10 text-center">
-                        <h1 class="text-4xl font-bold text-white">Create New Pricing plans</h1>
+                        <h1 class="text-4xl font-bold text-white">Pricing plans</h1>
                         {/* <p class="text-lg mt-3 font-semibold">Every plan includes 30 day free trial</p> */}
                     </div>
 
@@ -117,7 +108,7 @@ export default function CreateNewMemberShip() {
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Create Membership
+          Submit
         </button>
       </form>
     </div>
