@@ -15,11 +15,11 @@ const language = async (req, res) => {
 
   const options = {
     method: "GET",
-    url: "https://google-translate1.p.rapidapi.com/language/translate/v2/languages",
+    url: "https://google-translator9.p.rapidapi.com/v2/languages",
     headers: {
       "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Key": "4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19",
-      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+      "X-RapidAPI-Key": "cee2294232mshc5d1c380d8f1993p19cf0ejsn4dc41c1849fe",
+      "X-RapidAPI-Host": "google-translator9.p.rapidapi.com",
     },
   };
 
@@ -32,7 +32,7 @@ const language = async (req, res) => {
     const mappedLanguages = languagesData.languages.map(
       (lang, key) => lang.language + key
     );
-   
+
     res.status(200).json(mappedLanguages);
   } catch (error) {
     console.error(error);
@@ -96,19 +96,18 @@ const translate =
 
     const options = {
       method: "POST",
-      url: "https://google-translate1.p.rapidapi.com/language/translate/v2",
+      url: "https://google-translator9.p.rapidapi.com/v2",
       headers: {
         "content-type": "application/x-www-form-urlencoded",
         "Accept-Encoding": "application/gzip",
-        "X-RapidAPI-Key": "4ec8a5afe7mshae40a53599b15e2p154a04jsn4a2f4ca23c19",
-        "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+        "X-RapidAPI-Key": "cee2294232mshc5d1c380d8f1993p19cf0ejsn4dc41c1849fe",
+        "X-RapidAPI-Host": "google-translator9.p.rapidapi.com",
       },
       data: encodedParams,
     };
-    
 
     try {
-      const response = await axios.request(options);      
+      const response = await axios.request(options);
       res.status(201).json(response.data.data.translations[0].translatedText);
     } catch (error) {
       console.error(error);

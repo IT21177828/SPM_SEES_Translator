@@ -22,8 +22,8 @@ const store = (req, res) => {
   const name = req.body.params.name;
   const textToTranslate = req.body.params.textToTranslate;
 
-  console.log("Logging"+name)
-  console.log("Logging"+textToTranslate)
+  console.log("Logging" + name);
+  console.log("Logging" + textToTranslate);
 
   if (!name || !textToTranslate) {
     return res.status(400).json({
@@ -56,7 +56,7 @@ const store = (req, res) => {
 const checkBword = (req, res, next) => {
   const phase = req.body.params.textToTranslate;
 
-  console.log("Checkiiiing" +req.body);
+  console.log("Checkiiiing" + req.body);
 
   myPromises(phase)
     .then((result) => {
@@ -86,39 +86,39 @@ const remove = (req, res) => {
 };
 
 const getAllBWordsById = (req, res) => {
-    // const id = req.body.params.id;
-    const id = req.query.user || req.body.params?.id;
+  // const id = req.body.params.id;
+  const id = req.query.user || req.body.params?.id;
 
-    if(!id){
-      return res.status(403).json({
-        message: "User not found Login!",
+  if (!id) {
+    return res.status(403).json({
+      message: "User not found Login!",
+    });
+  }
+
+  try {
+    BadWordModel.find({ userID: id })
+      .sort({ createdAt: -1 })
+      .then((response) => {
+        console.log("first");
+        res.json({
+          response,
+        });
+      })
+      .catch(() => {
+        console.log("Error");
+        res.json({
+          message: "error ocured deleting!",
+        });
       });
-    }
-
-    try {
-      BadWordModel.find({userID: id}).sort({createdAt: -1})
-      .then((response) => {      
-        console.log("first")  
-          res.json({
-              response
-          })
-      }).catch(() => {
-          console.log("Error")
-          res.json({
-            message: "error ocured deleting!",
-          })
-      });
-    } catch (error) {
-      console.log(error)
-    }
-
-
-}
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export default {
   index,
   store,
   checkBword,
   remove,
-  getAllBWordsById
+  getAllBWordsById,
 };
